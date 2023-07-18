@@ -95,11 +95,18 @@ typedef enum _VL_CC_DATA_TYPE
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/*
+ * Callbacks
+ */
+
+
 /**
  * @brief Callback function used to notify new closed caption data.
  * 
  * This function is used by the ccDataReader implementation to notify and deliver new closed caption
  * data to the caller.
+ * The callback will not take ownership of CCDataBuffer. It is the responsibility of the caller to free/manage this memory.
  *
  * @param [in] context        Context pointer that was passed to ::vlhal_cc_Register().
  * @param [in] decoderIndex   Decoder ID from where this closed caption data comes from.
@@ -130,6 +137,13 @@ typedef void (* ccDataCallback) (void *context, int decoderIndex, VL_CC_DATA_TYP
  * @ingroup CCREADER_API
  */
 typedef void (* ccDecodeCallBack) (void *context, int decoderIndex, int event);
+
+
+/*
+ * Interfaces
+ */
+
+
 /**
   * @brief Registers callback functions.
   *
@@ -191,6 +205,7 @@ int vlhal_cc_DecodeSequence(void);
   * @return Error code.
   * @retval 0  Successfully started decoding.
   * @retval -1 Failed to start decoding.
+  * @pre Need to call vlhal_cc_Register before invoking this function.
   * @ingroup CCREADER_API
   */
 int media_closeCaptionStart (void* pVidDecHandle);
@@ -205,6 +220,7 @@ int media_closeCaptionStart (void* pVidDecHandle);
   * @return Error code.
   * @retval 0  Successfully stopped decoding.
   * @retval -1 Failed to stop decoding.
+  * @pre Need to call media_closeCaptionStart before invoking this function.
   * @ingroup CCREADER_API
   */
 int media_closeCaptionStop  (void);
