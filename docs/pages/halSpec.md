@@ -38,7 +38,7 @@
       - [Architecture Diagram](#architecture-diagram)
     - [Diagrams](#diagrams)
       - [Operational call sequence](#operational-call-sequence)
-      - [State machine of AudioCapture interface](#state-machine-of-audiocapture-interface)
+      - [State machine of closedcaption interface](#state-machine-of-audiocapture-interface)
 
 ## Acronyms, Terms and Abbreviations
 
