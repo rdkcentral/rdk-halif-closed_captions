@@ -51,7 +51,7 @@
 
 ## Description
 
-Closedcaption `HAL` must deliver closedcaption data to the caller. The `CC` `HAL` provides an interface to the caller to start the closed caption data acquisition activity with video decoder handle as the input. Data can be read directly or by registering a call back function based on the platform API support.
+Closedcaption `HAL` must deliver closedcaption data to the caller. The `CC` `HAL` provides an interface to the caller to start the closed caption data acquisition with video decoder handle as the input. Data can be read directly or by registering a call back function based on the platform API support.
 
 ## Component Runtime Execution Requirements
 
@@ -59,7 +59,7 @@ These requirements ensure that the `HAL` executes correctly within the run-time 
 
 ### Initialization and Startup
 
-Caller is expected to have complete control over the lifecycle of Closedcaption `HAL` (from open to close).
+Caller is expected to have complete control over the lifecycle of Closedcaption `HAL` (from start to stop).
 
 ### Threading Model
 
@@ -102,11 +102,11 @@ The following non-functional requirements are required to be supported by this i
 
 ### Logging and debugging requirements
 
-This interface is required to log all errors, warnings and critical informative messages that are necessary to debug/triage any issues impacting closedcaption use cases.
+This interface shall log all errors, warnings and critical informative messages that are necessary to debug/triage.
 
 ### Memory and performance requirements
 
-This interface is required to use only minimal memory/CPU resources while in closed/stopped state.
+This interface is required to use only minimal memory/CPU resources while in stopped state.
 
 ### Quality Control
 
@@ -146,15 +146,15 @@ Caller will initialize cc hal interface with the necessary information. `HAL` wi
 
 ```mermaid
 flowchart
-    A[caller] -->|Handle| B[HAL]
+    A[caller] -->|Handle| B[CC HAL]
     B --> |data| A
  ```
 
 Following is a typical sequence of operation:
-1. Register callbacks using  `vlhal_cc_Register`.
-2. Start cc data decoding using `media_close_Start()`. The interface will continuously deliver cc data to caller in real time via callback `ccDataCallback()`.
-4. When the cc data  no longer needed, stop caption decoding using `media_closecaption_Stop()`. This will stop the 'HAL' callbacks.
-5. Start and stop of decoding event is send to the caller using `ccDecodeCallback()`.
+1. Register callbacks using  `hal_cc_Register`.
+2. Start cc data decoding using `media_closecaption_Start()`. The interface will continuously deliver cc data to caller in real time via callback `ccDataCallback()`.
+4. When the cc data  no longer needed, stop caption decoding using `media_closecaption_Stop()`. This will stop the `HAL` callbacks.
+5. Start and stop of decoding is notified to the caller using `ccDecodeCallback()`.
 
 ### Diagrams
 

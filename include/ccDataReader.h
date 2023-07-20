@@ -37,21 +37,23 @@
 */ 
 /**
  * @defgroup CCREADER CC Reader
- * The CC Data Reader provides an interface to the caller to start the closed caption data acquisition activity with input as the decoder ID. 
- * Data can be read directly or by registering a call back function based on the platform API support.
- * With the decoder ID, the stack gets the port id for closed caption data from the video decoder.
- * The caller registers callback function with the CC Data Reader to get the ccdata.
- * The CC Data Reader reads CC data from the cc port of the decoder and passes the data to
- * the caller through the registered callback function.
+ * The CC Data Reader provides an interface to the caller to start the 
+ * closed caption data acquisition with decoder handle as input. 
+ * Data can be read directly or by registering a call back function 
+ * based on the platform API support.
+ * The caller registers callback function with the CC Data Reader to 
+ * get the ccdata. The CC Data Reader reads CC data from the cc port 
+ * of the decoder and passes the data to the caller through the 
+ * registered callback function.
  *
  * @ingroup CLOSED_CAPTION
  *
  * @defgroup CCREADER_API CC Data Reader API
- * Described herein are the Closed Caption Data Reader (ccDataReader) HAL types and functions
- * that are part of the Closed Caption sub-system.
+ * Described herein are the Closed Caption Data Reader (ccDataReader) HAL 
+ * types and functions that are part of the Closed Caption sub-system.
  *
- * The ccDataReader implementation delivers closed caption data to the caller using a callback 
- * mechanism.
+ * The ccDataReader implementation delivers closed caption data to the 
+ * caller using a callback mechanism.
  * @ingroup CCREADER
  */ 
 /**
@@ -70,15 +72,15 @@
 /**
  * @brief Closed caption decoding started event.
  *
- * This event is used to notify starting closed caption decoding.
+ * This event is used to signal the start of closed caption decoding.
  */
-#define CONTENT_PRESENTING_EVENT 0x05 /**< Event to notify start of CC Data decoding. */
+#define CONTENT_PRESENTING_EVENT 0x05
 /**
  * @brief Closed caption decoding stopped event.
  *
- * This event is used to notify stopping closed caption decoding.
+ * This event is used to signal the stop of closed caption decoding.
  */
-#define PRESENTATION_SHUTDOWN_EVENT  0x08 /**< Event to notify stop of CC data decoding. */
+#define PRESENTATION_SHUTDOWN_EVENT  0x08
 /**
  * @brief Closed Caption data types.
  *
@@ -101,36 +103,36 @@ extern "C" {
 
 
 /**
- * @brief Callback function used to notify new closed caption data.
+ * @brief Callback function used to deliver closed caption data to the caller.
  * 
- * This function is used by the ccDataReader implementation to notify and deliver new closed caption
- * data to the caller.
- * The callback will not take ownership of CCDataBuffer. It is the responsibility of the hal to free/manage this memory.
+ * The callback will not take ownership of CCDataBuffer. It is the responsibility 
+ * of the hal to free/manage this memory.
  *
  * @param [in] context        Context pointer that was passed to ::hal_cc_Register().
  * @param [in] decoderIndex   Decoder ID from where this closed caption data comes from.
  * @param [in] eType          Type of closed caption data (e.g. 607 or 608).
  * @param [in] ccData         Pointer to the buffer holding the closed caption data.
  * @param [in] dataLength     Size of the buffer in bytes.
- * @param [in] sequenceNumber Current decode sequence number (see ::hal_cc_DecodeSequence() for details).
- * @param [in] localPts       Local PTS value (not used now).
+ * @param [in] sequenceNumber Current decode sequence number.
+ * @param [in] localPts       Local PTS value.
  *
  * @return None.
  * @ingroup CCREADER_API
  */
-typedef void (* ccDataCallback) (void *context, int decoderIndex, CC_DATA_TYPE eType, unsigned char* ccData, 
-                                 unsigned dataLength, int sequenceNumber, long long localPts);
+typedef void (* ccDataCallback) (void *context, int decoderIndex, CC_DATA_TYPE eType,
+                                 unsigned char* ccData, unsigned dataLength,
+                                 int sequenceNumber, long long localPts);
+
+
 /**
  * @brief Callback function used to notify start and stop of decoding.
  * 
- * This function is used by the ccDataReader implementation to notify caller of starting 
- * and stopping of decoding as a result of ::media_closeCaptionStart() and 
- * ::media_closeCaptionStop() calls.
+ * When decoding is started, the event parameter will be set to ::CONTENT_PRESENTING_EVENT.
+ * When decoding is stopped, the event parameter will be set to ::PRESENTATION_SHUTDOWN_EVENT.
  *
  * @param [in] context       Context pointer that was passed to ::hal_cc_Register().
  * @param [in] decoderIndex  Decoder ID from where this notification comes from.
- * @param [in] event         Event type (::CONTENT_PRESENTING_EVENT if decoding started, 
- *                           ::PRESENTATION_SHUTDOWN_EVENT if decoding stopped).
+ * @param [in] event         Event type
  *
  * @return None.
  * @ingroup CCREADER_API
@@ -143,86 +145,113 @@ typedef void (* ccDecodeCallBack) (void *context, int decoderIndex, int event);
  */
 
 
-/**
-  * @brief Registers callback functions.
+  /**
+  * @brief Registers callback functions for closed caption handling.
   *
-  * This function is used to register data ready and decode start/stop callbacks.
+  * This function allows the caller to register two types of callback functions:
+  * - data_callback: A callback function that is called when new closed caption data is available.
+  * - decode_callback: A callback function that is called to notify the caller about the start
+  *                    or stop of closed caption decoding.
   * 
-  * @param [in] decoderIndex    Decoder ID to get the closed caption data from.
-  * @param [in] context         Context pointer to be forwarded to the callback calls (i.e. private data).
-  * @param [in] data_callback   Pointer to closed caption data ready callback function.
-  * @param [in] decode_callback Pointer to decode start/stop notification callback function.
+  * @param [in] decoderIndex    The Decoder ID to obtain the closed caption data from.
+  * @param [in] context         A context pointer to be forwarded to the callback calls (i.e., private data).
+  * @param [in] data_callback   Pointer to the callback function for handling new closed caption data.
+  * @param [in] decode_callback Pointer to the callback function for decode start/stop notifications.
   *
   * @return Error code.
   * @retval 0  Successfully registered callback functions.
   * @retval -1 Failed to register callback functions. 
   *
-  * @note Events like ::CONTENT_PRESENTING_EVENT or ::PRESENTATION_SHUTDOWN_EVENT will be conveyed
-  * to the caller on ::media_closeCaptionStart and ::media_closeCaptionStop calls. ::ccDecodeCallBack can be 
-  * called when a change in the presentation happens with respective decoder events (i.e. caller will 
-  * do closed caption text clean up on channel change).
+  * @note The data_callback() will be invoked whenever new closed caption data is available,
+  * allowing the caller to process the data accordingly.
+  * 
+  * The decode_callback() will be triggered when closed caption decoding starts or stops.
+  * Events like ::CONTENT_PRESENTING_EVENT or ::PRESENTATION_SHUTDOWN_EVENT will be conveyed
+  * to the caller on ::media_closeCaptionStart and ::media_closeCaptionStop calls. 
+  * 
   * @ingroup CCREADER_API
   */
-extern int hal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_callback,  ccDecodeCallBack decode_callback);
+extern int hal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_callback,
+                           ccDecodeCallBack decode_callback);
    
+
 /**
-  * @brief Returns the current decode sequence.
+  * @brief Returns the current decode sequence number.
   *
-  * This function is used to get the current decode sequence number.
+  * This function is used to retrieve the current decode sequence number, which is a unique identifier
+  * for the current state of the decoder.
   *
-  * The decode sequence is a number which is updated when starting and stopping the decoder. 
-  * ::media_closeCaptionStart() and ::media_closeCaptionStop() functions increment this number by 
-  * using following pseudo code:
+  * The decode sequence number is updated when the decoder starts and stops using the following pseudo code:
   * @code
     {
         gCCDecodeSeq++;
-        if(gCCDecodeSeq == 65535)
-            gCCDecodeSeq=0;
+        if (gCCDecodeSeq == 65535)
+            gCCDecodeSeq = 0;
     }
     @endcode
   *
-  * @note This number is also returned in the ::ccDataCallback as the @a sequenceNumber. 
+  * @note The decode sequence number is also passed as the @a sequenceNumber in the ::ccDataCallback.
+  *       This allows the caller to identify and associate received closed caption data with the
+  *       corresponding decode sequence number.
   *
-  * @note Decode sequence number will be used by the caller to ignore incorrect events, 
-  * probably in case of multiple decoders.
+  * @note The decode sequence number can be useful when dealing with multiple decoders. 
+  * The caller can use this number to distinguish between correct and potentially 
+  * outdated or irrelevant events.
   *
   * @param None.
   *
-  * @return Current decode sequence number.
+  * @return The current decode sequence number.
   * @ingroup CCREADER_API
   */
 int hal_cc_DecodeSequence(void);
 
+
 /**
-  * @brief Starts closed caption decoding.
+  * @brief Starts closed caption decoding for the specified video decoder.
   *
-  * This function is used to start closed caption decoding. Data ready callbacks will be started after this 
-  * call. Decode sequence number will be incremented (see ::hal_cc_DecodeSequence() for details).
+  * This function initiates closed caption decoding for a given video decoder. 
+  * After invoking this call, data_callback() will be triggered as new 
+  * closed caption data becomes available. The decode sequence number
+  * will also be incremented
   *
   * @param [in] pVidDecHandle Handle of the video decoder to retrieve the closed caption data from.
   *
   * @return Error code.
   * @retval 0  Successfully started decoding.
   * @retval -1 Failed to start decoding.
-  * @pre Need to call hal_cc_Register before invoking this function.
+  *
+  * @see hal_cc_DecodeSequence()
+  * @note Before invoking this function, ensure that hal_cc_Register has been called 
+  *       to register the required callback functions. Starting decoding without
+  *       proper registration may lead to unexpected behavior or incorrect data processing.
+  *
   * @ingroup CCREADER_API
   */
-int media_closeCaptionStart (void* pVidDecHandle);
+int media_closeCaptionStart(void* pVidDecHandle);
+
+
 /**
   * @brief Stops closed caption decoding.
   *
-  * This function is used to stop closed caption decoding. Data ready callbacks will be stopped after this 
-  * call. Decode sequence number will be incremented (see ::hal_cc_DecodeSequence() for details).
+  * This function is used to stop closed caption decoding. After invoking this call, 
+  * data ready callbacks for closed caption data will be halted.
+  * The decode sequence number will also be incremented
   *
-  * @param  None.
+  * @param None.
   *
   * @return Error code.
   * @retval 0  Successfully stopped decoding.
   * @retval -1 Failed to stop decoding.
-  * @pre Need to call media_closeCaptionStart before invoking this function.
+  *
+  * @see hal_cc_DecodeSequence()
+  * @note Before invoking this function, ensure that `media_closeCaptionStart` 
+          has been called to initiate decoding. Stopping decoding without first
+  *       starting it may lead to unexpected behavior or incorrect data processing.
+  *
   * @ingroup CCREADER_API
   */
-int media_closeCaptionStop  (void);
+int media_closeCaptionStop(void);
+
 #ifdef __cplusplus
 }
 #endif
