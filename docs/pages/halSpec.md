@@ -176,7 +176,7 @@ Following is a typical sequence of operation:
     HAL-->>caller: ccDecodeCallBack(stop event)
  ```
 
-#### State machine of AudioCapture interface
+#### State machine of Closedcaption interface
 
 
 ```mermaid
