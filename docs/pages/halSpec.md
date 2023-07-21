@@ -79,7 +79,7 @@ This interface is not required to be involved in any power management funtionali
 
 ### Asynchronous Notification Model
 
-Events like `CONTENT_PRESENTING_EVENT` or `PRESENTATION_SHUTDOWN_EVENT` will be conveyed to the caller to indicate start and stop of closedcaption decoding. These events are send using `ccDecodeCallback` function.
+Events like `CONTENT_PRESENTING_EVENT` or `PRESENTATION_SHUTDOWN_EVENT` will be conveyed to the caller to indicate start and stop of closedcaption decoding. These events are send using `ccDecodeCallBack` function.
 
 ### Blocking calls
 
@@ -154,7 +154,7 @@ Following is a typical sequence of operation:
 1. Register callbacks using  `hal_cc_Register`.
 2. Start cc data decoding using `media_closeCaptionStart()`. The interface will continuously deliver cc data to caller in real time via callback `ccDataCallback()`.
 4. When the cc data  no longer needed, stop caption decoding using `media_closeCaptionStop()`. This will stop the `HAL` callbacks.
-5. Start and stop of decoding is notified to the caller using `ccDecodeCallback()`.
+5. Start and stop of decoding is notified to the caller using `ccDecodeCallBack()`.
 
 ### Diagrams
 
