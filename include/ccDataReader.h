@@ -127,8 +127,8 @@ typedef void (* ccDataCallback) (void *context, int decoderIndex, CC_DATA_TYPE e
 /**
  * @brief Callback function used to notify start and stop of decoding.
  * 
- * When decoding is started, the event parameter will be set to ::CONTENT_PRESENTING_EVENT.
- * When decoding is stopped, the event parameter will be set to ::PRESENTATION_SHUTDOWN_EVENT.
+ * When decoding is started, the event parameter will be set to CONTENT_PRESENTING_EVENT.
+ * When decoding is stopped, the event parameter will be set to PRESENTATION_SHUTDOWN_EVENT.
  *
  * @param [in] context       Context pointer that was passed to ::hal_cc_Register().
  * @param [in] decoderIndex  Decoder ID from where this notification comes from.
@@ -154,7 +154,7 @@ typedef void (* ccDecodeCallBack) (void *context, int decoderIndex, int event);
   *                    or stop of closed caption decoding.
   * 
   * @param [in] decoderIndex    The Decoder ID to obtain the closed caption data from.
-  * @param [in] context         A context pointer to be forwarded to the callback calls (i.e., private data).
+  * @param [in] context         A context pointer to be forwarded to the callback calls.
   * @param [in] data_callback   Pointer to the callback function for handling new closed caption data.
   * @param [in] decode_callback Pointer to the callback function for decode start/stop notifications.
   *
@@ -178,10 +178,11 @@ extern int hal_cc_Register(int decoderIndex, void *context,  ccDataCallback data
 /**
   * @brief Returns the current decode sequence number.
   *
-  * This function is used to retrieve the current decode sequence number, which is a unique identifier
-  * for the current state of the decoder.
+  * This function is used to retrieve the current decode sequence number, which is a
+  * unique identifier for the current state of the decoder.
   *
-  * The decode sequence number is updated when the decoder starts and stops using the following pseudo code:
+  * The decode sequence number is updated when the decoder starts and stops using the
+  * following pseudo code:
   * @code
     {
         gCCDecodeSeq++;
@@ -190,7 +191,7 @@ extern int hal_cc_Register(int decoderIndex, void *context,  ccDataCallback data
     }
     @endcode
   *
-  * @note The decode sequence number is also passed as the @a sequenceNumber in the ::ccDataCallback.
+  * @note The decode sequence number is also passed as the @a sequenceNumber in the ccDataCallback.
   *       This allows the caller to identify and associate received closed caption data with the
   *       corresponding decode sequence number.
   *
@@ -214,7 +215,8 @@ int hal_cc_DecodeSequence(void);
   * closed caption data becomes available. The decode sequence number
   * will also be incremented
   *
-  * @param [in] pVidDecHandle Handle of the video decoder to retrieve the closed caption data from.
+  * @param [in] pVidDecHandle Handle of the video decoder to retrieve the
+  * closed caption data from.
   *
   * @return Error code.
   * @retval 0  Successfully started decoding.
