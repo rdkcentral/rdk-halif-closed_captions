@@ -152,8 +152,8 @@ flowchart
 
 Following is a typical sequence of operation:
 1. Register callbacks using  `hal_cc_Register`.
-2. Start cc data decoding using `media_closecaption_Start()`. The interface will continuously deliver cc data to caller in real time via callback `ccDataCallback()`.
-4. When the cc data  no longer needed, stop caption decoding using `media_closecaption_Stop()`. This will stop the `HAL` callbacks.
+2. Start cc data decoding using `media_closeCaptionStart()`. The interface will continuously deliver cc data to caller in real time via callback `ccDataCallback()`.
+4. When the cc data  no longer needed, stop caption decoding using `media_closeCaptionStop()`. This will stop the `HAL` callbacks.
 5. Start and stop of decoding is notified to the caller using `ccDecodeCallback()`.
 
 ### Diagrams
