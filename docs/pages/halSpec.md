@@ -94,7 +94,7 @@ All APIs must return errors synchronously as a return argument. The interface is
 
 ### Persistence Model
 
-There is no requirement to persist any settings information. The necessary parameters will be passed with `media_closecaption_start()` for every cc session.
+There is no requirement to persist any settings information. The necessary parameters will be passed with `media_closeCaptionStart()` for every cc session.
 
 ## Non-functional requirements
 
