@@ -6,7 +6,7 @@
 
 | Date (YYYY-mm-dd) | Author | Comment | Version |
 | --- | --------- | --- | --- |
-| 2023-07-20 | Anaswara Kookkal | First Release | 1.0.0 |
+| 2023-07-20 | | First Release | 1.0.0 |
 
 ## Table of Contents
 
@@ -51,7 +51,7 @@
 
 ## Description
 
-Closedcaption `HAL` must deliver closedcaption data to the caller. The `CC` `HAL` provides an interface to the caller to start the closed caption data acquisition with video decoder handle as the input. Data can be read directly or by registering a call back function based on the platform API support.
+Closedcaption `HAL` must deliver closedcaption data to the caller. The `CC` `HAL` provides an interface to the caller to start the closed caption data acquisition with video decoder handle as the input.
 
 ## Component Runtime Execution Requirements
 
@@ -67,7 +67,7 @@ This interface is required to be thread-safe and may be invoked from multiple ca
 
 ### Process Model
 
-Caller will take care of Closedcaption `HAL` initialization. The interface is expected to support a single instantiation with a single process.
+The interface is expected to support a single instantiation with a single process.
 
 ### Memory Model
 
@@ -85,7 +85,7 @@ Events like `CONTENT_PRESENTING_EVENT` or `PRESENTATION_SHUTDOWN_EVENT` will be 
 
 The following callbacks may block depending on the caller's internal operations, but will endeavour to return as soon as possible.
 
-  1. `ccDataCallback()`
+  1. `ccDataCallback()` 
   2. `ccDecodeCallBack()`
  
 ### Internal Error Handling
@@ -102,7 +102,7 @@ The following non-functional requirements are required to be supported by this i
 
 ### Logging and debugging requirements
 
-This interface shall log all errors, warnings and critical informative messages that are necessary to debug/triage.
+This interface is required to support DEBUG, INFO, WARNING, TRACE and ERROR messages. INFO, TRACE and DEBUG should be disabled by default and enabled when required.
 
 ### Memory and performance requirements
 
@@ -151,7 +151,7 @@ flowchart
  ```
 
 Following is a typical sequence of operation:
-1. Register callbacks using  `hal_cc_Register`.
+1. Register callbacks using  `hal_cc_Register()`.
 2. Start cc data decoding using `media_closeCaptionStart()`. The interface will continuously deliver cc data to caller in real time via callback `ccDataCallback()`.
 4. When the cc data  no longer needed, stop caption decoding using `media_closeCaptionStop()`. This will stop the `HAL` callbacks.
 5. Start and stop of decoding is notified to the caller using `ccDecodeCallBack()`.
