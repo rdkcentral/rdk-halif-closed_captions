@@ -149,11 +149,11 @@ No such requirements.
 `Caller` will initialize Closed Captions `HAL` interface with the necessary information. `HAL` will deliver closed caption data packets via the registered callbacks in a timely fashion.
 
 Following is a typical sequence of operation:
-1. Register callbacks using  `hal_cc_Register()`.
+1. Register callbacks using  `vlhal_cc_Register()`.
 2. Start closed caption data decoding using `media_closeCaptionStart()`. The interface will continuously deliver closed caption data to `caller` in real time via callback `ccDataCallback()`.
 4. When the closed caption data  no longer needed, stop caption decoding using `media_closeCaptionStop()`. This will stop the `HAL` callbacks.
 5. Start and stop of decoding is notified to the `caller` using `ccDecodeCallBack()`.
-6. `hal_cc_DecodeSequence()` can be called to get the decode sequence number whenever required.
+6. `vlhal_cc_DecodeSequence()` can be called to get the decode sequence number whenever required.
 
 ### Diagrams
 
@@ -165,7 +165,7 @@ Following is a typical sequence of operation:
     participant caller
     participant HAL
     participant Driver
-    caller->>HAL: hal_cc_Register()
+    caller->>HAL: vlhal_cc_Register()
     caller->>HAL:media_closeCaptionStart()
     HAL->>Driver:Initialize driver
     HAL-->> caller : ccDecodeCallBack()
