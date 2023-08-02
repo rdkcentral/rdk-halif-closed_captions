@@ -1,18 +1,16 @@
 @mainpage
 
-# Closedcaptions HAL Documentation
+# Closed Captions HAL Documentation
 
 ## Version and Version History
 
-| Date (YYYY-mm-dd) | Author | Comment | Version |
-| --- | --------- | --- | --- |
-| 2023-07-20 | | First Release | 1.0.0 |
+| Date (DD-MM-YY) | Comment | Version |
+| --- | --------- | --- |
+| 02-08-23 | First Release | 1.0.0 |
 
 ## Table of Contents
 
-- [Closedcaptions HAL Documentation](#closedcaption-hal-documentation)
-  - [Version and Version History](#version-and-version-history)
-  - [Table of Contents](#table-of-contents)
+- [Closed Captions HAL Documentation](#closed-captions-hal-documentation)
   - [Acronyms, Terms and Abbreviations](#acronyms-terms-and-abbreviations)
   - [Description](#description)
   - [Component Runtime Execution Requirements](#component-runtime-execution-requirements)
@@ -35,10 +33,9 @@
     - [Platform or Product Customization](#platform-or-product-customization)
   - [Interface API Documentation](#interface-api-documentation)
     - [Theory of operation](#theory-of-operation)
-      - [Architecture Diagram](#architecture-diagram)
     - [Diagrams](#diagrams)
       - [Operational call sequence](#operational-call-sequence)
-      - [State machine of closedcaption interface](#state-machine-of-audiocapture-interface)
+      - [State machine of closed caption interface](#state-machine-of-closed-caption-interface)
 
 ## Acronyms, Terms and Abbreviations
 
@@ -46,32 +43,33 @@
 - `HAL` - Hardware Abstraction layer
 - `RDK` - Reference Development Kit
 - `STB` - Set Top Box
-- `CC`  - Closedcaption
 - `cb`  - Callback
-- `CONTENT_PRESENTING_EVENT` - Event to notify start of CC data decoding
-- `PRESENTATION_SHUTDOWN_EVENT` - Event to notify stop of CC data decoding
+- `CPU` - Central Processing Unit
+- `CONTENT_PRESENTING_EVENT` - Event to notify start of closed caption data decoding
+- `PRESENTATION_SHUTDOWN_EVENT` - Event to notify stop of closed caption data decoding
 
 ## Description
 
-Closedcaption `HAL` must deliver closedcaption data to the caller. The `CC` `HAL` provides an interface to the caller to start the closed caption data acquisition with video decoder handle as the input.
+Closed Captions `HAL` must deliver closed caption data to the `caller`. The Closed Captions `HAL` provides an interface to the `caller` to start the closed caption data acquisition with video decoder handle as the input.
 
 ```mermaid
+%%{init: {"flowchart": {"curve": "linear"}} }%%
 flowchart
-    A[caller] -->|Handle| B[CC HAL]
+    A[caller] -->|Handle| B[Closed Captions HAL]
     B --> |data| A
  ```
 
 ## Component Runtime Execution Requirements
 
-These requirements ensure that the `HAL` executes correctly within the run-time environment that it will be used in.
+These requirements ensure that this interface executes correctly within the run-time environment that it will be used in.
 
 ### Initialization and Startup
 
-Caller is expected to have complete control over the lifecycle of Closedcaption `HAL` (from start to stop).
+`Caller` must have complete control over the lifecycle of Closed Caption `HAL` (from start to stop).
 
 ### Threading Model
 
-This interface is required to be thread-safe and may be invoked from multiple caller threads.
+This interface is required to be thread-safe and may be invoked from multiple `caller` threads.
 
 ### Process Model
 
@@ -79,7 +77,7 @@ The interface is expected to support a single instantiation with a single proces
 
 ### Memory Model
 
-Closedcaption `HAL` is responsible for its own memory management. The buffer used to pass cc data through `ccDataCallback()` must be managed after the callback returns.
+Closed Captions `HAL` is responsible for its own memory management. The buffer used to pass closed caption data through `ccDataCallback()` must be managed after the callback returns.
 
 ### Power Management Requirements
 
@@ -87,22 +85,22 @@ This interface is not required to be involved in any power management funtionali
 
 ### Asynchronous Notification Model
 
-Events like `CONTENT_PRESENTING_EVENT` or `PRESENTATION_SHUTDOWN_EVENT` will be conveyed to the caller to indicate start and stop of closedcaption decoding. These events are send using `ccDecodeCallBack` function.
+Events like `CONTENT_PRESENTING_EVENT` or `PRESENTATION_SHUTDOWN_EVENT` will be conveyed to the `caller` to indicate start and stop of closed caption decoding. These events are send using `ccDecodeCallBack()` function.
 
 ### Blocking calls
 
-The following callbacks may block depending on the caller's internal operations, but will endeavour to return as soon as possible.
+The following callbacks may block depending on the `caller`'s internal operations, but will endeavour to return as soon as possible.
 
-  1. `ccDataCallback()` - Invoked whenever new cc data is available.
-  2. `ccDecodeCallBack()` - Invoked during start and stop of cc data decoding.
+  1. `ccDataCallback()` - Invoked whenever new closed caption data is available.
+  2. `ccDecodeCallBack()` - Invoked during start and stop of closed caption data decoding.
  
 ### Internal Error Handling
 
-All APIs must return errors synchronously as a return argument. The interface is responsible for managing its internal errors.
+All `API`s must return errors synchronously as a return argument. The interface is responsible for managing its internal errors.
 
 ### Persistence Model
 
-There is no requirement to persist any settings information. The necessary parameters will be passed with `media_closeCaptionStart()` for every cc session.
+There is no requirement to persist any settings information. The necessary parameters will be passed with `media_closeCaptionStart()` for every closed captions session.
 
 ## Non-functional requirements
 
@@ -114,24 +112,24 @@ This interface is required to support DEBUG, INFO, WARNING, TRACE and ERROR mess
 
 ### Memory and performance requirements
 
-This interface is required to use only minimal memory/CPU resources while in stopped state.
+This interface is required to use only minimal memory/`CPU` resources while in stopped state.
 
 ### Quality Control
 
-* The implementation is required to perform static analysis, our preferred tool is Coverity.
-* Open-source copyright validation is required to be performed, e.g.: Black duck, FossID.
-* Have a zero-warning policy with regards to compiling. All warnings are required to be treated as errors.
-* Use of memory analysis tools like Valgrind are encouraged, to identify leaks/corruption.
-* Tests will endeavour to create worst case scenarios to assist investigations.
+* This interface is required to perform static analysis, our preferred tool is Coverity.
+* Have a zero-warning policy with regards to compiling. All warnings are required to be treated as error.
+* Copyright validation is required to be performed, e.g.: Black duck, FossID.
+* Use of memory analysis tools like Valgrind are encouraged, to identify leaks/corruptions.
+* `HAL` Tests will endeavour to create worst case scenarios to assist investigations.
 * Improvements by any party to the testing suite are required to be fed back.
 
 ### Licensing
 
-The Closedcaption header file license is CLOSED.
+The Closed Caption header file license is CLOSED.
 
 ### Build Requirements
 
-This interface is required to build into shared library. The shared library must be named `librdkCCReader.so`. The building mechanism must be independent of Yocto.
+This interface is required to be built into shared library. The shared library must be named `librdkCCReader.so`. The building mechanism must be independent of Yocto.
 
 ### Variability Management
 
@@ -148,13 +146,13 @@ No such requirements.
 
 ### Theory of operation
 
-Caller will initialize cc hal interface with the necessary information. `HAL` will deliver cc data packets via the registered callbacks in a timely fashion.
+`Caller` will initialize Closed Captions `HAL` interface with the necessary information. `HAL` will deliver closed caption data packets via the registered callbacks in a timely fashion.
 
 Following is a typical sequence of operation:
 1. Register callbacks using  `hal_cc_Register()`.
-2. Start cc data decoding using `media_closeCaptionStart()`. The interface will continuously deliver cc data to caller in real time via callback `ccDataCallback()`.
-4. When the cc data  no longer needed, stop caption decoding using `media_closeCaptionStop()`. This will stop the `HAL` callbacks.
-5. Start and stop of decoding is notified to the caller using `ccDecodeCallBack()`.
+2. Start closed caption data decoding using `media_closeCaptionStart()`. The interface will continuously deliver closed caption data to `caller` in real time via callback `ccDataCallback()`.
+4. When the closed caption data  no longer needed, stop caption decoding using `media_closeCaptionStop()`. This will stop the `HAL` callbacks.
+5. Start and stop of decoding is notified to the `caller` using `ccDecodeCallBack()`.
 6. `hal_cc_DecodeSequence()` can be called to get the decode sequence number whenever required.
 
 ### Diagrams
@@ -173,7 +171,7 @@ Following is a typical sequence of operation:
     HAL-->> caller : ccDecodeCallBack()
     loop data decoding
         HAL->>Driver : Query for data
-        Driver-->>HAL : CC data
+        Driver-->>HAL : closed caption data
         HAL-->>caller: ccDataCallback()
         caller->>caller:consume buffer
     end
@@ -182,7 +180,7 @@ Following is a typical sequence of operation:
     HAL-->>caller: ccDecodeCallBack()
  ```
 
-#### State machine of Closedcaption interface
+#### State machine of closed caption interface
 
 
 ```mermaid
