@@ -86,12 +86,12 @@
  *
  * This enumartion lists closed caption data types.
  */
-typedef enum CC_DATA_TYPE
+typedef enum _VL_CC_DATA_TYPE
 {
-  CC_DATA_TYPE_608 = 0, /**< CEA-608 standard closed captions. */
-  CC_DATA_TYPE_708 = 1, /**< CEA-708 standard closed captions. */
-  CC_DATA_TYPE_XDS = 2, /**< CEA-608 Extended Data Services (XDS) metadata. */
-}CC_DATA_TYPE;
+  VL_CC_DATA_TYPE_608 = 0, /**< CEA-608 standard closed captions. */
+  VL_CC_DATA_TYPE_708 = 1, /**< CEA-708 standard closed captions. */
+  VL_CC_DATA_TYPE_XDS = 2, /**< CEA-608 Extended Data Services (XDS) metadata. */
+}VL_CC_DATA_TYPE;
 /** @} */
 #ifdef __cplusplus
 extern "C" {
@@ -108,7 +108,7 @@ extern "C" {
  * The callback will not take ownership of CCDataBuffer. It is the responsibility 
  * of the hal to free/manage this memory.
  *
- * @param [in] context        Context pointer that was passed to ::hal_cc_Register().
+ * @param [in] context        Context pointer that was passed to ::vlhal_cc_Register().
  * @param [in] decoderIndex   Decoder ID from where this closed caption data comes from.
  * @param [in] eType          Type of closed caption data (e.g. 607 or 608).
  * @param [in] ccData         Pointer to the buffer holding the closed caption data.
@@ -119,7 +119,7 @@ extern "C" {
  * @return None.
  * @ingroup CCREADER_API
  */
-typedef void (* ccDataCallback) (void *context, int decoderIndex, CC_DATA_TYPE eType,
+typedef void (* ccDataCallback) (void *context, int decoderIndex, VL_CC_DATA_TYPE eType,
                                  unsigned char* ccData, unsigned dataLength,
                                  int sequenceNumber, long long localPts);
 
@@ -130,7 +130,7 @@ typedef void (* ccDataCallback) (void *context, int decoderIndex, CC_DATA_TYPE e
  * When decoding is started, the event parameter will be set to CONTENT_PRESENTING_EVENT.
  * When decoding is stopped, the event parameter will be set to PRESENTATION_SHUTDOWN_EVENT.
  *
- * @param [in] context       Context pointer that was passed to ::hal_cc_Register().
+ * @param [in] context       Context pointer that was passed to ::vlhal_cc_Register().
  * @param [in] decoderIndex  Decoder ID from where this notification comes from.
  * @param [in] event         Event type
  *
@@ -171,7 +171,7 @@ typedef void (* ccDecodeCallBack) (void *context, int decoderIndex, int event);
   * 
   * @ingroup CCREADER_API
   */
-extern int hal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_callback,
+extern int vlhal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_callback,
                            ccDecodeCallBack decode_callback);
    
 
@@ -204,7 +204,7 @@ extern int hal_cc_Register(int decoderIndex, void *context,  ccDataCallback data
   * @return The current decode sequence number.
   * @ingroup CCREADER_API
   */
-int hal_cc_DecodeSequence(void);
+int vlhal_cc_DecodeSequence(void);
 
 
 /**
@@ -222,8 +222,8 @@ int hal_cc_DecodeSequence(void);
   * @retval 0  Successfully started decoding.
   * @retval -1 Failed to start decoding.
   *
-  * @see hal_cc_DecodeSequence()
-  * @note Before invoking this function, ensure that hal_cc_Register has been called 
+  * @see vlhal_cc_DecodeSequence()
+  * @note Before invoking this function, ensure that vlhal_cc_Register() has been called 
   *       to register the required callback functions. Starting decoding without
   *       proper registration may lead to unexpected behavior or incorrect data processing.
   *
@@ -245,7 +245,7 @@ int media_closeCaptionStart(void* pVidDecHandle);
   * @retval 0  Successfully stopped decoding.
   * @retval -1 Failed to stop decoding.
   *
-  * @see hal_cc_DecodeSequence()
+  * @see vlhal_cc_DecodeSequence()
   * @note Before invoking this function, ensure that `media_closeCaptionStart` 
           has been called to initiate decoding. Stopping decoding without first
   *       starting it may lead to unexpected behavior or incorrect data processing.
