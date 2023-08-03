@@ -1,5 +1,3 @@
-@mainpage
-
 # Closed Captions HAL Documentation
 
 ## Version and Version History
@@ -146,7 +144,7 @@ No such requirements.
 
 ### Theory of operation
 
-`Caller` will initialize Closed Captions `HAL` interface with the necessary information. `HAL` will deliver closed caption data packets via the registered callbacks in a timely fashion.
+`Caller` will initialize Closed Captions `HAL` interface with the necessary information. `HAL` will deliver closed caption data packets via the registered callbacks in a timely fashion. Data can be read directly or by registering a call back function based on the platform API support.
 
 Following is a typical sequence of operation:
 1. Register callbacks using  `vlhal_cc_Register()`.
