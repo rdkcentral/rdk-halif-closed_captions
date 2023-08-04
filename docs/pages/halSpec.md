@@ -10,6 +10,7 @@
 
 - [Closed Captions HAL Documentation](#Closed-Captions-hal-documentation)
   - [Acronyms, Terms and Abbreviations](#acronyms-terms-and-abbreviations)
+  - [References](#references)
   - [Description](#description)
   - [Component Runtime Execution Requirements](#component-runtime-execution-requirements)
     - [Initialization and Startup](#initialization-and-startup)
@@ -44,6 +45,13 @@
 - `CPU` - Central Processing Unit
 - `CONTENT_PRESENTING_EVENT` - Event to notify start of Closed Caption data decoding
 - `PRESENTATION_SHUTDOWN_EVENT` - Event to notify stop of Closed Caption data decoding
+
+## References
+
+- `CEA-608 Specification` document - ANSI/CEA standard, Line 21 Data Services, ANSI/CEA-608-E
+   - Purchase link : https://webstore.ansi.org/standards/cea/cea6082008ansi
+- `CEA-708 Specification` document - CEA Standard, Digital Television (DTV) Closed Captioning, CEA-708-E
+   - Purchase ink : https://webstore.ansi.org/standards/cea/cea7082013
 
 ## Description
 
