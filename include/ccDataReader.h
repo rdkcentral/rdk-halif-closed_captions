@@ -91,6 +91,7 @@ typedef enum _VL_CC_DATA_TYPE
   VL_CC_DATA_TYPE_608 = 0, /**< CEA-608 standard closed captions. */
   VL_CC_DATA_TYPE_708 = 1, /**< CEA-708 standard closed captions. */
   VL_CC_DATA_TYPE_XDS = 2, /**< CEA-608 Extended Data Services (XDS) metadata. */
+  VL_CC_DATA_TYPE_MAX      /**< Out of range */
 }VL_CC_DATA_TYPE;
 /** @} */
 #ifdef __cplusplus
@@ -260,6 +261,5 @@ int media_closeCaptionStop(void);
 #endif //CCDATA_H     
 /** @} */
 /** @} */
-Powered by Gitiles
 txt
 json
