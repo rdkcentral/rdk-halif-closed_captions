@@ -109,13 +109,13 @@ extern "C" {
  * The callback will not take ownership of CCDataBuffer. It is the responsibility 
  * of the hal to free/manage this memory.
  *
- * @param [in] context        Context pointer that was passed to ::vlhal_cc_Register().
- * @param [in] decoderIndex   Decoder ID from where this closed caption data comes from.
- * @param [in] eType          Type of closed caption data (e.g. 607 or 608).
- * @param [in] ccData         Pointer to the buffer holding the closed caption data.
- * @param [in] dataLength     Size of the buffer in bytes.
- * @param [in] sequenceNumber Current decode sequence number.
- * @param [in] localPts       Local PTS value.
+ * @param [in] context        Context pointer that was passed to ::vlhal_cc_Register()
+ * @param [in] decoderIndex   Decoder ID from where this closed caption data comes from
+ * @param [in] eType          Type of closed caption data (e.g. 607 or 608)
+ * @param [in] ccData         Pointer to the buffer holding the closed caption data
+ * @param [in] dataLength     Size of the buffer in bytes
+ * @param [in] sequenceNumber Current decode sequence number
+ * @param [in] localPts       Local PTS value
  *
  * @return None.
  * @ingroup CCREADER_API
@@ -133,7 +133,7 @@ typedef void (* ccDataCallback) (void *context, int decoderIndex, VL_CC_DATA_TYP
  *
  * @param [in] context       Context pointer that was passed to ::vlhal_cc_Register().
  * @param [in] decoderIndex  Decoder ID from where this notification comes from.
- * @param [in] event         Event type
+ * @param [in] event         Event type(CONTENT_PRESENTING_EVENT or PRESENTATION_SHUTDOWN_EVENT)
  *
  * @return None.
  * @ingroup CCREADER_API
@@ -160,17 +160,18 @@ typedef void (* ccDecodeCallBack) (void *context, int decoderIndex, int event);
   * @param [in] decode_callback Pointer to the callback function for decode start/stop notifications.
   *
   * @return Error code.
-  * @retval 0  Successfully registered callback functions.
-  * @retval -1 Failed to register callback functions. 
+  * @retval 0  Successfully registered callback functions
+  * @retval -1 Failed to register callback functions 
   *
   * @note The data_callback() will be invoked whenever new closed caption data is available,
   * allowing the caller to process the data accordingly.
   * 
   * The decode_callback() will be triggered when closed caption decoding starts or stops.
   * Events like ::CONTENT_PRESENTING_EVENT or ::PRESENTATION_SHUTDOWN_EVENT will be conveyed
-  * to the caller on ::media_closeCaptionStart and ::media_closeCaptionStop calls. 
+  * to the caller on ::media_closeCaptionStart() and ::media_closeCaptionStop() calls. 
   * 
   * @ingroup CCREADER_API
+  * @todo Common prefix to be added for all APIs in this header
   */
 extern int vlhal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_callback,
                            ccDecodeCallBack decode_callback);
@@ -192,13 +193,14 @@ extern int vlhal_cc_Register(int decoderIndex, void *context,  ccDataCallback da
     }
     @endcode
   *
-  * @note The decode sequence number is also passed as the @a sequenceNumber in the ccDataCallback.
+  * @note The decode sequence number is also passed as the @sequenceNumber in the ccDataCallback().
   *       This allows the caller to identify and associate received closed caption data with the
   *       corresponding decode sequence number.
   *
   * @note The decode sequence number can be useful when dealing with multiple decoders. 
   * The caller can use this number to distinguish between correct and potentially 
   * outdated or irrelevant events.
+  * @todo Will be deprecated in future version.
   *
   * @param None.
   *
@@ -220,13 +222,14 @@ int vlhal_cc_DecodeSequence(void);
   * closed caption data from.
   *
   * @return Error code.
-  * @retval 0  Successfully started decoding.
-  * @retval -1 Failed to start decoding.
+  * @retval 0  Successfully started decoding
+  * @retval -1 Failed to start decoding
   *
   * @see vlhal_cc_DecodeSequence()
   * @note Before invoking this function, ensure that vlhal_cc_Register() has been called 
   *       to register the required callback functions. Starting decoding without
   *       proper registration may lead to unexpected behavior or incorrect data processing.
+  * @todo Handle validity check - Return value with new enum added
   *
   * @ingroup CCREADER_API
   */
@@ -243,8 +246,8 @@ int media_closeCaptionStart(void* pVidDecHandle);
   * @param None.
   *
   * @return Error code.
-  * @retval 0  Successfully stopped decoding.
-  * @retval -1 Failed to stop decoding.
+  * @retval 0  Successfully stopped decoding
+  * @retval -1 Failed to stop decoding
   *
   * @see vlhal_cc_DecodeSequence()
   * @note Before invoking this function, ensure that `media_closeCaptionStart` 
