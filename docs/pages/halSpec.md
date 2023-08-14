@@ -94,14 +94,14 @@ Events like `CONTENT_PRESENTING_EVENT` or `PRESENTATION_SHUTDOWN_EVENT` will be 
 
 ### Blocking calls
 
-The following callbacks may block depending on the `caller`'s internal operations, but will endeavour to return as soon as possible.
+The following callbacks may block depending on the `caller's` internal operations, but will endeavour to return as soon as possible.
 
   1. `ccDataCallback()` - Invoked whenever new Closed Caption data is available.
   2. `ccDecodeCallBack()` - Invoked during start and stop of Closed Caption data decoding.
  
 ### Internal Error Handling
 
-All `API`s must return errors synchronously as a return argument. The interface is responsible for managing its internal errors.
+All `APIs` must return errors synchronously as a return argument. The interface is responsible for managing its internal errors.
 
 ### Persistence Model
 
@@ -151,7 +151,7 @@ This interface is not required to have any platform or product customizations.
 
 ### Theory of operation
 
-`Caller` will initialize Closed Captions `HAL` interface with the necessary information. `HAL` will deliver Closed Caption data packets via the registered callbacks in a timely fashion. Data can be read directly or by registering a call back function based on the platform API support.
+`Caller` will initialize Closed Captions `HAL` interface with the necessary information. `HAL` will deliver Closed Caption data packets via the registered callbacks in a timely fashion. Data can be read directly or by registering a call back function based on the platform API support. Closed Caption data pakcet send should be in proper format :  cc_type,cc_data_1,cc_data_2. `HAL` should check process_cc_data_flag bit as per CEA-708 spec and should ignore the packets with this flag set to 0. cc_valid bit also should be parsed by the `HAL` as per CEA-708 spec and only the packets with cc_valid set to 1 should be send to the `caller`.
 
 Following is a typical sequence of operation:
 1. Register callbacks using  `vlhal_cc_Register()`.
@@ -180,6 +180,8 @@ Following is a typical sequence of operation:
         HAL-->>caller: ccDataCallback()
         caller->>caller:consume buffer
     end
+    caller->> HAL: vlhal_cc_DecodeSequence()
+    HAL-->>caller:Decode sequence number
     caller->>HAL: media_closeCaptionStop
     HAL->>Driver: Stop indication
     HAL-->>caller: ccDecodeCallBack()
