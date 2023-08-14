@@ -9,7 +9,16 @@
 * Copyright (c) 2014 RDK Management, LLC. All rights reserved.
 * ============================================================================
 */
- 
+
+/**
+* @addtogroup HPK HPK
+* @{
+**/
+/**
+* @defgroup CLOSED_CAPTIONS_HAL Closed Captions HAL
+* @{
+**/
+
 /**
 * @file ccDataReader.h
 *
@@ -106,12 +115,12 @@ extern "C" {
 /**
  * @brief Callback function used to deliver closed caption data to the caller.
  * 
- * The callback will not take ownership of CCDataBuffer. It is the responsibility 
- * of the hal to free/manage this memory.
+ * The callback will not take ownership of ccData Buffer. It is the responsibility 
+ * of the Hal to free/manage this memory.
  *
  * @param [in] context        Context pointer that was passed to ::vlhal_cc_Register()
  * @param [in] decoderIndex   Decoder ID from where this closed caption data comes from
- * @param [in] eType          Type of closed caption data (e.g. 607 or 608)
+ * @param [in] eType          Type of closed caption data, VL_CC_DATA_TYPE(eg: VL_CC_DATA_TYPE_608 or VL_CC_DATA_TYPE_708)
  * @param [in] ccData         Pointer to the buffer holding the closed caption data
  * @param [in] dataLength     Size of the buffer in bytes
  * @param [in] sequenceNumber Current decode sequence number
@@ -262,7 +271,10 @@ int media_closeCaptionStop(void);
 }
 #endif
 #endif //CCDATA_H     
-/** @} */
-/** @} */
+/** @} */ // 
+/** @} */ // 
+/** @} */ // End of Closed Captions Hal
+/** @} */ // End of HPK
 txt
 json
+
