@@ -262,6 +262,7 @@ int media_closeCaptionStart(void* pVidDecHandle);
   * @note Before invoking this function, ensure that `media_closeCaptionStart` 
           has been called to initiate decoding. Stopping decoding without first
   *       starting it may lead to unexpected behavior or incorrect data processing.
+  * @todo pass handle as input argument
   *
   * @ingroup CCREADER_API
   */
