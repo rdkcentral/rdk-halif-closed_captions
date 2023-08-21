@@ -94,7 +94,7 @@ Events like `CONTENT_PRESENTING_EVENT` or `PRESENTATION_SHUTDOWN_EVENT` will be 
 
 ### Blocking calls
 
-The following callbacks may block depending on the `caller's` internal operations, but will endeavour to return as soon as possible.
+The following callbacks may block depending on the `caller's` internal operations, but will endeavour to return within few milli seconds.
 
   1. `ccDataCallback()` - Invoked whenever new Closed Caption data is available.
   2. `ccDecodeCallBack()` - Invoked during start and stop of Closed Caption data decoding.
