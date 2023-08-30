@@ -49,13 +49,13 @@
 ## References
 
 - `CEA-608 Specification` document - ANSI/CEA standard, Line 21 Data Services, ANSI/CEA-608-E
-   - Purchase link : https://webstore.ansi.org/standards/cea/cea6082008ansi
+   - Link : https://webstore.ansi.org/standards/cea/cea6082008ansi
 - `CEA-708 Specification` document - CEA Standard, Digital Television (DTV) Closed Captioning, CEA-708-E
-   - Purchase ink : https://webstore.ansi.org/standards/cea/cea7082013
+   - Link : https://webstore.ansi.org/standards/cea/cea7082013
 
 ## Description
 
-Closed Captions `HAL` must deliver Closed Caption data to the `caller`. The Closed Captions `HAL` provides an interface to the `caller` to start the Closed Caption data acquisition with video decoder handle as the input.
+This `HAL` provides an interface to the `caller` to start and stop the closed caption data acquisition with video decoder handle as the input.
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "linear"}} }%%
@@ -90,7 +90,7 @@ This interface is not required to be involved in any power management funtionali
 
 ### Asynchronous Notification Model
 
-Events like `CONTENT_PRESENTING_EVENT` or `PRESENTATION_SHUTDOWN_EVENT` will be conveyed to the `caller` to indicate start and stop of Closed Caption decoding. These events are send using `ccDecodeCallBack()` function.
+Events like `CONTENT_PRESENTING_EVENT` or `PRESENTATION_SHUTDOWN_EVENT` shall be conveyed to the `caller` to indicate start and stop of Closed Caption decoding. These events are sent using `ccDecodeCallBack()` function.
 
 ### Blocking calls
 
@@ -105,7 +105,7 @@ All `APIs` must return errors synchronously as a return argument. The interface 
 
 ### Persistence Model
 
-There is no requirement to persist any settings information. The necessary parameters will be passed with `media_closeCaptionStart()` for every Closed Captions session.
+There is no requirement to persist any settings information.
 
 ## Non-functional requirements
 
@@ -122,9 +122,9 @@ This interface is required to use only minimal memory/`CPU` resources while in s
 ### Quality Control
 
 * This interface is required to perform static analysis, our preferred tool is Coverity.
-* Have a zero-warning policy with regards to compiling. All warnings are required to be treated as error.
+* Have a zero-warning policy with regards to compiling. All warnings are required to be treated as errors.
 * Copyright validation is required to be performed, e.g.: Black duck, FossID.
-* Use of memory analysis tools like Valgrind are encouraged, to identify leaks/corruptions.
+* Use of memory analysis tools like Valgrind are encouraged to identify leaks/corruptions.
 * `HAL` Tests will endeavour to create worst case scenarios to assist investigations.
 * Improvements by any party to the testing suite are required to be fed back.
 
@@ -151,7 +151,7 @@ This interface is not required to have any platform or product customizations.
 
 ### Theory of operation
 
-`Caller` will initialize Closed Captions `HAL` interface with the necessary information. `HAL` will deliver Closed Caption data packets via the registered callbacks in a timely fashion. Data can be read directly or by registering a call back function based on the platform API support. As per the spec, Closed Caption data pakcet shall send in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` shall check `process_cc_data_flag` bit as per CEA-708 spec and shall ignore the packets with this flag set to 0. The `HAL` shall parse the `cc_valid` bit as per CEA-708 spec and only the packets with `cc_valid` set to 1 shall be send to the `caller`.
+`Caller` will initialize Closed Captions `HAL` interface with the necessary information. `HAL` will deliver Closed Caption data packets via the registered callbacks aligned with the corresponding video frame. Data can be read directly or by registering a call back function based on the platform `API` support. As per the spec, Closed Caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` shall check `process_cc_data_flag` bit as per CEA-708 spec and shall ignore the packets with this flag set to 0. The `HAL` shall parse the `cc_valid` bit as per CEA-708 spec and only the packets with `cc_valid` set to 1 shall be sent to the `caller`.
 
 Following is a typical sequence of operation:
 1. Register callbacks using  `vlhal_cc_Register()`.
@@ -182,7 +182,7 @@ Following is a typical sequence of operation:
     end
     caller->> HAL: vlhal_cc_DecodeSequence()
     HAL-->>caller:Decode sequence number
-    caller->>HAL: media_closeCaptionStop
+    caller->>HAL: media_closeCaptionStop()
     HAL->>Driver: Stop indication
     HAL-->>caller: ccDecodeCallBack()
  ```
