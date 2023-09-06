@@ -3,7 +3,7 @@
 # PLEASE RUN THIS SCRIPT FROM INSIDE THE docs/ DIR SO THAT RELATIVE PATHS SET IN Doxyfile.cfg WORK AS EXPECTED
 
 # In the future this should moved to a fixed verison
-HAL_GENERATOR_VERSION=develop
+HAL_GENERATOR_VERSION=master
 
 # This will look up the last tag in the git repo, depending on the project this may require modification
 PROJECT_VERSION=$(git describe --tags | head -n1)
@@ -13,7 +13,7 @@ if [ -d "./build" ]; then
     make -C ./build PROJECT_NAME="RDK-V Closed Captions HAL" PROJECT_VERSION=${PROJECT_VERSION}
 else
     echo "Cloning Common documentation generation"
-    git clone git@github.com:comcast-sky/rdk-components-hal-doxygen.git build
+    git clone git@github.com:rdkcentral/hal-doxygen.git build
     cd ./build
     git flow init -d
     git checkout ${HAL_GENERATOR_VERSION}
