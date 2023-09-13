@@ -45,6 +45,7 @@
 - `CPU` - Central Processing Unit
 - `CONTENT_PRESENTING_EVENT` - Event to notify start of Closed Caption data decoding
 - `PRESENTATION_SHUTDOWN_EVENT` - Event to notify stop of Closed Caption data decoding
+-  `Caller` - Any user of the interface via the `APIs`
 
 ## References
 
@@ -61,6 +62,8 @@ This `HAL` provides an interface to the `caller` to start and stop the closed ca
 %%{init: {"flowchart": {"curve": "linear"}} }%%
 flowchart
     A[caller] -->|Handle| B[Closed Captions HAL]
+    B --> |Query for data| C[Driver]
+    C --> |data| B
     B --> |data| A
  ```
 
@@ -74,7 +77,7 @@ These requirements ensure that this interface executes correctly within the run-
 
 ### Threading Model
 
-This interface is required to be thread-safe and may be invoked from multiple `caller` threads.
+This interface is required to be thread-safe and has provision to be invoked from multiple `caller` threads. In case of multiple register calls, values passed in the last register call will be used.
 
 ### Process Model
 
@@ -94,7 +97,7 @@ Events like `CONTENT_PRESENTING_EVENT` or `PRESENTATION_SHUTDOWN_EVENT` shall be
 
 ### Blocking calls
 
-The following callbacks may block depending on the `caller's` internal operations, but will endeavour to return within few milli seconds.
+The following callbacks shall be blocked depending on the `caller's` internal operations, but will need to be returned within a few milli seconds.
 
   1. `ccDataCallback()` - Invoked whenever new Closed Caption data is available.
   2. `ccDecodeCallBack()` - Invoked during start and stop of Closed Caption data decoding.
@@ -159,6 +162,7 @@ Following is a typical sequence of operation:
 4. When the Closed Caption data  no longer needed, stop caption decoding using `media_closeCaptionStop()`. This will stop the `HAL` callbacks.
 5. Start and stop of decoding is notified to the `caller` using `ccDecodeCallBack()`.
 6. `vlhal_cc_DecodeSequence()` can be called to get the decode sequence number whenever required.
+@todo add cc_init()/term() with handle in next version
 
 ### Diagrams
 
