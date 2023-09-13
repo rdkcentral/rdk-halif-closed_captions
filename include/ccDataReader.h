@@ -195,7 +195,8 @@ int vlhal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_call
   * outdated or irrelevant events.
   * @note Will be deprecated in future version
   *
-  * @return The current decode sequence number
+  * @return int The current decode sequence number
+  * @retval range 0-65535
   */
 int vlhal_cc_DecodeSequence(void);
 
