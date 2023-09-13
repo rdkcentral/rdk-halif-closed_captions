@@ -46,6 +46,7 @@
 */ 
 /**
  * @defgroup CCREADER CC Reader
+ * @{
  * The CC Data Reader provides an interface to the caller to start the 
  * closed caption data acquisition with decoder handle as input. 
  * Data can be read directly or by registering a call back function 
@@ -60,15 +61,10 @@
  *
  * The ccDataReader implementation delivers closed caption data to the 
  * caller using a callback mechanism.
- * @ingroup CCREADER
  */ 
 
 #ifndef CCDATA_H
 #define CCDATA_H
-/**
- * @ingroup CCREADER
- * @{
- */
 /**
  * @brief Closed caption decoding started event
  *
@@ -190,7 +186,7 @@ int vlhal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_call
     }
     @endcode
   *
-  * @note The decode sequence number is also passed as the @sequenceNumber in the ccDataCallback().
+  * @note The decode sequence number is also passed as the sequenceNumber in the ccDataCallback().
   *       This allows the caller to identify and associate received closed caption data with the
   *       corresponding decode sequence number.
   *
@@ -198,8 +194,6 @@ int vlhal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_call
   * The caller can use this number to distinguish between correct and potentially 
   * outdated or irrelevant events.
   * @note Will be deprecated in future version
-  *
-  * @param None
   *
   * @return The current decode sequence number
   */
@@ -238,8 +232,6 @@ int media_closeCaptionStart(void* pVidDecHandle);
   * This function is used to stop closed caption decoding. After invoking this call, 
   * data ready callbacks for closed caption data will be halted.
   * The decode sequence number will also be incremented.
-  *
-  * @param None
   *
   * @return int - Status
   * @retval 0  Successfully stopped decoding
