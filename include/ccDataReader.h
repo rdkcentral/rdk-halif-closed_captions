@@ -165,6 +165,7 @@ typedef void (* ccDecodeCallBack) (void *context, int decoderIndex, int event);
   * to the caller on ::media_closeCaptionStart() and ::media_closeCaptionStop() calls.
   * 
   * @todo Common prefix to be added for all APIs in this header
+  * @note decoderIndex is always 0 in the current implementation
   */
 int vlhal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_callback,
                            ccDecodeCallBack decode_callback);
