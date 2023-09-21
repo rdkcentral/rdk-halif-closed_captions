@@ -106,7 +106,7 @@ extern "C" {
  * of the Hal to free/manage this memory.
  *
  * @param [in] context        Context pointer that was passed to ::vlhal_cc_Register()
- * @param [in] decoderIndex   Decoder ID from where this closed caption data comes from
+ * @param [in] decoderIndex   Identifier of the decoder that was passed to ::vlhal_cc_Register()
  * @param [in] eType          Type of closed caption data, VL_CC_DATA_TYPE(eg: VL_CC_DATA_TYPE_608 or VL_CC_DATA_TYPE_708)
  * @param [in] ccData         Pointer to the buffer holding the closed caption data
  * @param [in] dataLength     Size of the buffer in bytes
@@ -127,7 +127,7 @@ typedef void (* ccDataCallback) (void *context, int decoderIndex, VL_CC_DATA_TYP
  * When decoding is stopped, the event parameter will be set to PRESENTATION_SHUTDOWN_EVENT
  *
  * @param [in] context       Context pointer that was passed to ::vlhal_cc_Register()
- * @param [in] decoderIndex  Decoder ID from where this notification comes from
+ * @param [in] decoderIndex  Identifier of the decoder that was passed to ::vlhal_cc_Register()
  * @param [in] event         Event type(CONTENT_PRESENTING_EVENT or PRESENTATION_SHUTDOWN_EVENT)
  *
  * @return None
@@ -148,7 +148,7 @@ typedef void (* ccDecodeCallBack) (void *context, int decoderIndex, int event);
   * - decode_callback: A callback function that is called to notify the caller about the start
   *                    or stop of closed caption decoding
   * 
-  * @param [in] decoderIndex    The Decoder ID to obtain the closed caption data from
+  * @param [in] decoderIndex    Identifier of the decoder
   * @param [in] context         A context pointer to be forwarded to the callback calls
   * @param [in] data_callback   Pointer to the callback function for handling new closed caption data
   * @param [in] decode_callback Pointer to the callback function for decode start/stop notifications
