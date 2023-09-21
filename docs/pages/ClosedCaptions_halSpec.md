@@ -153,7 +153,7 @@ This interface is not required to have any platform or product customizations.
 
 ### Theory of operation
 
-`Caller` will initialize Closed Captions `HAL` interface with the callback functions, decoder index and video decoder handle. The value of decoder index will be zero always. `HAL` will deliver Closed Caption data packets via the registered callbacks aligned with the corresponding video frame. Data can be read directly or by registering a call back function based on the platform `API` support. As per the spec, Closed Caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` shall check `process_cc_data_flag` bit as per CEA-708 spec and shall ignore the packets with this flag set to 0. The `HAL` shall parse the `cc_valid` bit as per [CEA-708 spec](#references) and only the packets with `cc_valid` set to 1 shall be sent to the `caller`.
+`Caller` will initialize Closed Captions `HAL` interface with the callback functions, decoder index and video decoder handle. The value of decoder index will be zero always, and this value will be passed back in the ccDataCallback() and ccDecodeCallBack() functions. `HAL` will deliver Closed Caption data packets via the registered callbacks aligned with the corresponding video frame. The `HAL` implementer can read data directly from the driver or by registering a call back function based on the platform `API` support. As per the spec, Closed Caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` shall check `process_cc_data_flag` bit as per CEA-708 spec and shall ignore the packets with this flag set to 0. The `HAL` shall parse the `cc_valid` bit as per [CEA-708 spec](#references) and only the packets with `cc_valid` set to 1 shall be sent to the `caller`.
 
 Following is a typical sequence of operation:
 1. Register callbacks using  `vlhal_cc_Register()`.
@@ -161,7 +161,7 @@ Following is a typical sequence of operation:
 4. When the Closed Caption data  no longer needed, stop caption decoding using `media_closeCaptionStop()`. This will stop the `HAL` callbacks.
 5. Start and stop of decoding is notified to the `caller` using `ccDecodeCallBack()`.
 6. `vlhal_cc_DecodeSequence()` can be called to get the decode sequence number whenever required.
-@todo add cc_init()/term() with handle in next version
+<!--- @todo add cc_init()/term() with handle in next version -->
 
 ### Diagrams
 
