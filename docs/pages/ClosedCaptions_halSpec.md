@@ -8,7 +8,6 @@
 
 ## Table of Contents
 
-- [Closed Captions HAL Documentation](#Closed-Captions-hal-documentation)
   - [Acronyms, Terms and Abbreviations](#acronyms-terms-and-abbreviations)
   - [References](#references)
   - [Description](#description)
@@ -93,11 +92,11 @@ This interface is not required to be involved in any power management funtionali
 
 ### Asynchronous Notification Model
 
-Events like `CONTENT_PRESENTING_EVENT` or `PRESENTATION_SHUTDOWN_EVENT` shall be conveyed to the `caller` to indicate start and stop of Closed Caption decoding. These events are sent using `ccDecodeCallBack()` function.
+Events `CONTENT_PRESENTING_EVENT` and `PRESENTATION_SHUTDOWN_EVENT` shall be conveyed to the caller to indicate start and stop of Closed Caption decoding respectively. These events are sent using `ccDecodeCallBack()` function.
 
 ### Blocking calls
 
-The following callbacks shall be blocked depending on the `caller's` internal operations, but will need to be returned within a few milli seconds.
+The following callbacks shall be blocked depending on the `caller's` internal operations, but will need to be returned within a few milliseconds.
 
   1. `ccDataCallback()` - Invoked whenever new Closed Caption data is available.
   2. `ccDecodeCallBack()` - Invoked during start and stop of Closed Caption data decoding.
@@ -154,7 +153,7 @@ This interface is not required to have any platform or product customizations.
 
 ### Theory of operation
 
-`Caller` will initialize Closed Captions `HAL` interface with the necessary information. `HAL` will deliver Closed Caption data packets via the registered callbacks aligned with the corresponding video frame. Data can be read directly or by registering a call back function based on the platform `API` support. As per the spec, Closed Caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` shall check `process_cc_data_flag` bit as per CEA-708 spec and shall ignore the packets with this flag set to 0. The `HAL` shall parse the `cc_valid` bit as per [CEA-708 spec](#references) and only the packets with `cc_valid` set to 1 shall be sent to the `caller`.
+`Caller` will initialize Closed Captions `HAL` interface with the callback functions, decoder index and video decoder handle. The value of decoder index will be zero always. `HAL` will deliver Closed Caption data packets via the registered callbacks aligned with the corresponding video frame. Data can be read directly or by registering a call back function based on the platform `API` support. As per the spec, Closed Caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` shall check `process_cc_data_flag` bit as per CEA-708 spec and shall ignore the packets with this flag set to 0. The `HAL` shall parse the `cc_valid` bit as per [CEA-708 spec](#references) and only the packets with `cc_valid` set to 1 shall be sent to the `caller`.
 
 Following is a typical sequence of operation:
 1. Register callbacks using  `vlhal_cc_Register()`.
