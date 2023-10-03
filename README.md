@@ -1,1 +1,1 @@
-./docs/pages/ClosedCaptions_halSpec.md
+./docs/pages/closed-captions_halSpec.md
