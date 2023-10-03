@@ -42,8 +42,8 @@
 - `STB` - Set Top Box
 - `cb`  - Callback
 - `CPU` - Central Processing Unit
-- `CONTENT_PRESENTING_EVENT` - Event to notify start of Closed Caption data decoding
-- `PRESENTATION_SHUTDOWN_EVENT` - Event to notify stop of Closed Caption data decoding
+- `CONTENT_PRESENTING_EVENT` - Event to notify start of closed caption data decoding
+- `PRESENTATION_SHUTDOWN_EVENT` - Event to notify stop of closed caption data decoding
 -  `Caller` - Any user of the interface via the `APIs`
 
 ## References
@@ -60,7 +60,7 @@ This `HAL` provides an interface to the `caller` to start and stop the closed ca
 ```mermaid
 %%{init: {"flowchart": {"curve": "linear"}} }%%
 flowchart
-    A[caller] -->|Handle| B[Closed Captions HAL]
+    A[Caller] <-->|Handle| B[Closed Captions HAL]
     B --> |Query for data| C[Driver]
     C --> |data| B
     B --> |data| A
@@ -72,7 +72,7 @@ These requirements ensure that this interface executes correctly within the run-
 
 ### Initialization and Startup
 
-`Caller` must have complete control over the lifecycle of this interface(from start to stop).
+`Caller` must have complete control over the lifecycle of this interface (from start to stop).
 
 ### Threading Model
 
@@ -84,7 +84,7 @@ The interface is expected to support a single instantiation with a single proces
 
 ### Memory Model
 
-Closed Captions `HAL` is responsible for its own memory management. The buffer used to pass Closed Caption data through `ccDataCallback()` must be managed after the callback returns.
+Closed Captions `HAL` is responsible for its own memory management. The buffer used to pass closed caption data through `ccDataCallback()` must be managed after the callback returns.
 
 ### Power Management Requirements
 
@@ -92,14 +92,14 @@ This interface is not required to be involved in any power management funtionali
 
 ### Asynchronous Notification Model
 
-Events `CONTENT_PRESENTING_EVENT` and `PRESENTATION_SHUTDOWN_EVENT` shall be conveyed to the caller to indicate start and stop of Closed Caption decoding respectively. These events are sent using `ccDecodeCallBack()` function.
+Events `CONTENT_PRESENTING_EVENT` and `PRESENTATION_SHUTDOWN_EVENT` must be conveyed to the caller to indicate start and stop of closed caption decoding respectively. These events are sent using `ccDecodeCallBack()` function.
 
 ### Blocking calls
 
-The following callbacks shall be blocked depending on the `caller's` internal operations, but will need to be returned within a few milliseconds.
+The following callbacks may be blocked depending on the `caller's` internal operations, but will need to be returned within a few milliseconds.
 
-  1. `ccDataCallback()` - Invoked whenever new Closed Caption data is available.
-  2. `ccDecodeCallBack()` - Invoked during start and stop of Closed Caption data decoding.
+  1. `ccDataCallback()` - Invoked whenever new closed caption data is available
+  2. `ccDecodeCallBack()` - Invoked during start and stop of closed caption dat§a decoding
  
 ### Internal Error Handling
 
@@ -132,7 +132,7 @@ This interface is required to use only minimal memory/`CPU` resources while in s
 
 ### Licensing
 
-The Closed Caption header file license is CLOSED.
+The closed caption header file license is CLOSED.
 
 ### Build Requirements
 
@@ -153,12 +153,12 @@ This interface is not required to have any platform or product customizations.
 
 ### Theory of operation
 
-`Caller` will initialize Closed Captions `HAL` interface with the callback functions, decoder index and video decoder handle. The value of decoder index will be zero always, and this value will be passed back in the ccDataCallback() and ccDecodeCallBack() functions. `HAL` will deliver Closed Caption data packets via the registered callbacks aligned with the corresponding video frame. The `HAL` implementer can read data directly from the driver or by registering a call back function based on the platform `API` support. As per the spec, Closed Caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` shall check `process_cc_data_flag` bit as per CEA-708 spec and shall ignore the packets with this flag set to 0. The `HAL` shall parse the `cc_valid` bit as per [CEA-708 spec](#references) and only the packets with `cc_valid` set to 1 shall be sent to the `caller`.
+`Caller` will initialize closed captions `HAL` interface with the callback functions, decoder index and video decoder handle. The value of decoder index will be zero always, and this value will be passed back in the ccDataCallback() and ccDecodeCallBack() functions. `HAL` will deliver closed caption data packets via the registered callbacks aligned with the corresponding video frame. The `HAL` can read data directly from the driver or by registering a call back function based on the platform `API` support. As per the spec, closed caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` must check `process_cc_data_flag` bit as per CEA-708 spec and must ignore the packets with this flag set to 0. The `HAL` must parse the `cc_valid` bit as per [CEA-708 spec](#references) and only the packets with `cc_valid` set to 1 must be sent to the `caller`.
 
 Following is a typical sequence of operation:
 1. Register callbacks using  `vlhal_cc_Register()`.
-2. Start Closed Caption data decoding using `media_closeCaptionStart()`. The interface will continuously deliver Closed Caption data to `caller` in real time via callback `ccDataCallback()`.
-4. When the Closed Caption data  no longer needed, stop caption decoding using `media_closeCaptionStop()`. This will stop the `HAL` callbacks.
+2. Start closed caption data decoding using `media_closeCaptionStart()`. The interface will continuously deliver closed caption data to `caller` in real time via callback `ccDataCallback()`.
+4. When the closed caption data is no longer needed, stop caption decoding using `media_closeCaptionStop()`. This will stop the `HAL` callbacks.
 5. Start and stop of decoding is notified to the `caller` using `ccDecodeCallBack()`.
 6. `vlhal_cc_DecodeSequence()` can be called to get the decode sequence number whenever required.
 <!--- @todo add cc_init()/term() with handle in next version -->

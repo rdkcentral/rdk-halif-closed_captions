@@ -11,11 +11,17 @@
 */
 
 /**
-* @addtogroup HPK HPK
+* @addtogroup HPK Hardware Porting Kit
 * @{
 **/
+
 /**
-* @defgroup CLOSED_CAPTIONS_HAL Closed Captions HAL
+* @defgroup Closed_Captions Closed Captions Module
+* @{
+**/
+
+/**
+* @defgroup Closed_Captions_HAL Closed Captions HAL
 * @{
 **/
 
@@ -45,7 +51,7 @@
 *
 */ 
 /**
- * @defgroup CCREADER CC Reader
+ * @defgroup CC_Data_Reader CC Data Reader
  * @{
  * The CC Data Reader provides an interface to the caller to start the 
  * closed caption data acquisition with decoder handle as input. 
@@ -63,20 +69,23 @@
  * caller using a callback mechanism.
  */ 
 
-#ifndef CCDATA_H
-#define CCDATA_H
+#ifndef __CC_DATA_READER_H__
+#define __CC_DATA_READER_H__
+
 /**
  * @brief Closed caption decoding started event
  *
  * This event is used to signal the start of closed caption decoding
  */
 #define CONTENT_PRESENTING_EVENT 0x05
+
 /**
  * @brief Closed caption decoding stopped event
  *
  * This event is used to signal the stop of closed caption decoding
  */
 #define PRESENTATION_SHUTDOWN_EVENT  0x08
+
 /**
  * @brief Closed Caption data types
  *
@@ -97,7 +106,6 @@ extern "C" {
 /*
  * Callbacks
  */
-
 
 /**
  * @brief Callback function used to deliver closed caption data to the caller
@@ -138,7 +146,6 @@ typedef void (* ccDecodeCallBack) (void *context, int decoderIndex, int event);
 /*
  * Interfaces
  */
-
 
   /**
   * @brief Registers callback functions for closed caption handling
@@ -253,8 +260,10 @@ int media_closeCaptionStop(void);
 #ifdef __cplusplus
 }
 #endif
-#endif //CCDATA_H     
-/** @} */ // End of CC Reader
-/** @} */ // End of Closed Captions Hal
+#endif // End of __CC_DATA_READER_H__
+
+/** @} */ // End of CC Data Reader
+/** @} */ // End of Closed Captions HAL
+/** @} */ // End of Closed Captions Module
 /** @} */ // End of HPK
 
