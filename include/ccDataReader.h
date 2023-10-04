@@ -234,6 +234,7 @@ int vlhal_cc_DecodeSequence(void);
   *       proper registration may lead to unexpected behavior or incorrect data processing.
   * @todo Handle validity check - Return unique values for all error scenarios as enums and 
   * this should used across all APIs in this file
+  * @todo use Closed Captions handle rather than video handle
   *
   */
 int media_closeCaptionStart(void* pVidDecHandle);
