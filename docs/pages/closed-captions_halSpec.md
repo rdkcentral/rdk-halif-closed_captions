@@ -76,7 +76,7 @@ These requirements ensure that this interface executes correctly within the run-
 
 ### Threading Model
 
-This interface is required to be thread-safe and has provision to be invoked from multiple `caller` threads. In case of multiple register calls, values passed in the last register call will be used.
+This interface is required to be thread-safe.
 
 ### Process Model
 
