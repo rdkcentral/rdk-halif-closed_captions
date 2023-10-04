@@ -72,7 +72,7 @@ These requirements ensure that this interface executes correctly within the run-
 
 ### Initialization and Startup
 
-`Caller` must have complete control over the lifecycle of this interface (from start to stop).
+`Caller` must call `vlhal_cc_Register()` before calling any other `API`. Any platform specific initialization can be done from `media_closeCaptionStart()`. `Caller` must have complete control over the lifecycle of this interface (from start to stop).
 
 ### Threading Model
 
@@ -153,7 +153,7 @@ This interface is not required to have any platform or product customizations.
 
 ### Theory of operation
 
-`Caller` will initialize closed captions `HAL` interface with the callback functions, decoder index and video decoder handle. The value of decoder index will be zero always, and this value will be passed back in the ccDataCallback() and ccDecodeCallBack() functions. `HAL` will deliver closed caption data packets via the registered callbacks aligned with the corresponding video frame. The `HAL` can read data directly from the driver or by registering a call back function based on the platform `API` support. As per the spec, closed caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` must check `process_cc_data_flag` bit as per CEA-708 spec and must ignore the packets with this flag set to 0. The `HAL` must parse the `cc_valid` bit as per [CEA-708 spec](#references) and only the packets with `cc_valid` set to 1 must be sent to the `caller`.
+`Caller` will initialize closed captions `HAL` interface with the callback functions, decoder index and video decoder handle. The value of decoder index will be zero always, and this value will be passed back in the ccDataCallback() and ccDecodeCallBack() functions. `HAL` will deliver closed caption data packets via the registered callbacks aligned with the corresponding video frame.The `HAL` can read data directly from the driver or by registering a call back function based on the platform `API` support. As per the spec, closed caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` must check `process_cc_data_flag` bit as per CEA-708 spec and must ignore the packets with this flag set to 0. The `HAL` must parse the `cc_valid` bit as per [CEA-708 spec](#references) and only the packets with `cc_valid` set to 1 must be sent to the `caller`.
 
 Following is a typical sequence of operation:
 1. Register callbacks using  `vlhal_cc_Register()`.
@@ -175,7 +175,7 @@ Following is a typical sequence of operation:
     participant Driver
     caller->>HAL: vlhal_cc_Register()
     caller->>HAL:media_closeCaptionStart()
-    HAL->>Driver:Initialize driver
+    HAL->>Driver:Initialize/setup driver to fetch Closed Caption data
     HAL-->> caller : ccDecodeCallBack()
     loop data decoding
         HAL->>Driver : Query for data
