@@ -161,7 +161,6 @@ Following is a typical sequence of operation:
 4. When the closed caption data is no longer needed, stop caption decoding using `media_closeCaptionStop()`. This will stop the `HAL` callbacks.
 5. Start and stop of decoding is notified to the `caller` using `ccDecodeCallBack()`.
 6. `vlhal_cc_DecodeSequence()` can be called to get the decode sequence number whenever required.
-<!--- @todo add cc_init()/term() with handle in next version -->
 
 ### Diagrams
 
