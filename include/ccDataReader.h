@@ -175,6 +175,7 @@ typedef void (* ccDecodeCallBack) (void *context, int decoderIndex, int event);
   * @note decoderIndex should be 0 always. This value is passed back in ccDataCallback() and 
   * ccDecodeCallBack() functions.
   * @todo decoderIndex will be removed in future versions 
+  * @todo add cc_init()/term() functions in the next phase.
   */
 int vlhal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_callback,
                            ccDecodeCallBack decode_callback);
@@ -227,6 +228,7 @@ int vlhal_cc_DecodeSequence(void);
   * @retval -1 Failed to start decoding
   *
   * @see vlhal_cc_DecodeSequence()
+  * @pre vlhal_cc_Register()
   * @note Before invoking this function, ensure that vlhal_cc_Register() has been called 
   *       to register the required callback functions. Starting decoding without
   *       proper registration may lead to unexpected behavior or incorrect data processing.
@@ -249,6 +251,7 @@ int media_closeCaptionStart(void* pVidDecHandle);
   * @retval -1 Failed to stop decoding
   *
   * @see vlhal_cc_DecodeSequence()
+  * @pre media_closeCaptionStart()
   * @note Before invoking this function, ensure that `media_closeCaptionStart` 
           has been called to initiate decoding. Stopping decoding without first
   *       starting it may lead to unexpected behavior or incorrect data processing.
