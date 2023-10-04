@@ -132,7 +132,7 @@ This interface is required to use only minimal memory/`CPU` resources while in s
 
 ### Licensing
 
-The closed caption header file license is CLOSED.
+The closed caption header file license is RDK M.
 
 ### Build Requirements
 
