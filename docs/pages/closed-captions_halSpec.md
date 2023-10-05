@@ -69,6 +69,7 @@ flowchart
 ## Component Runtime Execution Requirements
 
 These requirements ensure that this interface executes correctly within the run-time environment that it will be used in.
+Since closed caption data is coming from video decoder, make sure that video decoders are initialized and available for further operations before the Closed Caption module is up.
 
 ### Initialization and Startup
 
