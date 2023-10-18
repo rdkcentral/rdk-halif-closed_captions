@@ -171,11 +171,8 @@ typedef void (* ccDecodeCallBack) (void *context, int decoderIndex, int event);
   * Events like ::CONTENT_PRESENTING_EVENT or ::PRESENTATION_SHUTDOWN_EVENT will be conveyed
   * to the caller on ::media_closeCaptionStart() and ::media_closeCaptionStop() calls.
   * 
-  * @todo Common prefix to be added for all APIs in this header
   * @note decoderIndex should be 0 always. This value is passed back in ccDataCallback() and 
   * ccDecodeCallBack() functions.
-  * @todo decoderIndex will be removed in future versions 
-  * @todo add cc_init()/term() functions in the next phase.
   */
 int vlhal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_callback,
                            ccDecodeCallBack decode_callback);
@@ -232,9 +229,7 @@ int vlhal_cc_DecodeSequence(void);
   * @note Before invoking this function, ensure that vlhal_cc_Register() has been called 
   *       to register the required callback functions. Starting decoding without
   *       proper registration may lead to unexpected behavior or incorrect data processing.
-  * @todo Handle validity check - Return unique values for all error scenarios as enums and 
   * this should used across all APIs in this file
-  * @todo use Closed Captions handle rather than video handle
   *
   */
 int media_closeCaptionStart(void* pVidDecHandle);
@@ -256,7 +251,6 @@ int media_closeCaptionStart(void* pVidDecHandle);
   * @note Before invoking this function, ensure that `media_closeCaptionStart` 
           has been called to initiate decoding. Stopping decoding without first
   *       starting it may lead to unexpected behavior or incorrect data processing.
-  * @todo pass handle as input argument
   *
   */
 int media_closeCaptionStop(void);
