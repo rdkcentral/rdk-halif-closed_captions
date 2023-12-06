@@ -85,7 +85,7 @@ The interface is expected to support a single instantiation with a single proces
 
 ### Memory Model
 
-Closed Captions `HAL` is responsible for its own memory management. The buffer used to pass closed caption data through `ccDataCallback()` must be managed after the callback returns.
+Closed Captions `HAL` is responsible for its own memory management. The buffer used to pass closed caption data through `closedcaptionDataCallback()` must be managed after the callback returns.
 
 ### Power Management Requirements
 
