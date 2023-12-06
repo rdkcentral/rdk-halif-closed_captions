@@ -194,7 +194,7 @@ int Closedcaption_Register(int decoderIdx, void *ctx,  closedcaptionDataCallback
     }
     @endcode
   *
-  * @note The decode sequence number is also passed as the sequenceNumber in the ccDataCallback().
+  * @note The decode sequence number is also passed as the sequenceNumber in the closedcaptionDataCallback().
   *       This allows the caller to identify and associate received closed caption data with the
   *       corresponding decode sequence number.
   *
