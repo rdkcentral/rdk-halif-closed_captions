@@ -91,13 +91,13 @@
  *
  * This enumeration lists closed caption data types
  */
-typedef enum _VL_CC_DATA_TYPE
+typedef enum _CLOSEDCAPTION_DATA_TYPE
 {
-  VL_CC_DATA_TYPE_608 = 0, /**< CEA-608 standard closed captions */
-  VL_CC_DATA_TYPE_708 = 1, /**< CEA-708 standard closed captions */
-  VL_CC_DATA_TYPE_XDS = 2, /**< CEA-608 Extended Data Services (XDS) metadata */
-  VL_CC_DATA_TYPE_MAX      /**< Out of range */
-}VL_CC_DATA_TYPE;
+  CLOSEDCAPTION_DATA_TYPE_608 = 0, /**< CEA-608 standard closed captions */
+  CLOSEDCAPTION_DATA_TYPE_708 = 1, /**< CEA-708 standard closed captions */
+  CLOSEDCAPTION_DATA_TYPE_XDS = 2, /**< CEA-608 Extended Data Services (XDS) metadata */
+  CLOSEDCAPTION_DATA_TYPE_MAX      /**< Out of range */
+}CLOSEDCAPTION_DATA_TYPE;
 
 #ifdef __cplusplus
 extern "C" {
@@ -113,19 +113,19 @@ extern "C" {
  * The callback will not take ownership of ccData Buffer. It is the responsibility 
  * of the Hal to free/manage this memory.
  *
- * @param [in] context        Context pointer that was passed to ::vlhal_cc_Register()
- * @param [in] decoderIndex   Identifier of the decoder that was passed to ::vlhal_cc_Register()
- * @param [in] eType          Type of closed caption data, VL_CC_DATA_TYPE(eg: VL_CC_DATA_TYPE_608 or VL_CC_DATA_TYPE_708)
- * @param [in] ccData         Pointer to the buffer holding the closed caption data
- * @param [in] dataLength     Size of the buffer in bytes
- * @param [in] sequenceNumber Current decode sequence number
- * @param [in] localPts       Local PTS value
+ * @param [in] ctx           Context pointer that was passed to ::Closedcaption_Register()
+ * @param [in] decoderIdx    Identifier of the decoder that was passed to ::Closedcaption_Register()
+ * @param [in] ccDataType    Type of closed caption data, CLOSEDCAPTION_DATA_TYPE(eg: CLOSEDCAPTION_DATA_TYPE_608 or CLOSEDCAPTION_DATA_TYPE_708)
+ * @param [in] ccDataBuffer  Pointer to the buffer holding the closed caption data
+ * @param [in] ccDataLength  Size of the buffer in bytes
+ * @param [in] seqNumber     Current decode sequence number
+ * @param [in] lPts          Local PTS value
  *
  * @return None
  */
-typedef void (* ccDataCallback) (void *context, int decoderIndex, VL_CC_DATA_TYPE eType,
-                                 unsigned char* ccData, unsigned dataLength,
-                                 int sequenceNumber, long long localPts);
+typedef void (* closedcaptionDataCallback) (void *ctx, int decoderIdx, CLOSEDCAPTION_DATA_TYPE ccDataType,
+                                 unsigned char* ccDataBuffer, unsigned ccDataLength,
+                                 int seqNumber, long long lPts);
 
 
 /**
@@ -134,13 +134,13 @@ typedef void (* ccDataCallback) (void *context, int decoderIndex, VL_CC_DATA_TYP
  * When decoding is started, the event parameter will be set to CONTENT_PRESENTING_EVENT
  * When decoding is stopped, the event parameter will be set to PRESENTATION_SHUTDOWN_EVENT
  *
- * @param [in] context       Context pointer that was passed to ::vlhal_cc_Register()
- * @param [in] decoderIndex  Identifier of the decoder that was passed to ::vlhal_cc_Register()
- * @param [in] event         Event type(CONTENT_PRESENTING_EVENT or PRESENTATION_SHUTDOWN_EVENT)
+ * @param [in] ctx         Context pointer that was passed to ::Closedcaption_Register()
+ * @param [in] decoderIdx  Identifier of the decoder that was passed to ::Closedcaption_Register()
+ * @param [in] statusEvent Event type(CONTENT_PRESENTING_EVENT or PRESENTATION_SHUTDOWN_EVENT)
  *
  * @return None
  */
-typedef void (* ccDecodeCallBack) (void *context, int decoderIndex, int event);
+typedef void (* closedcaptionDecodeCallBack) (void *ctx, int decoderIdx, int statusEvent);
 
 
 /*
@@ -151,31 +151,31 @@ typedef void (* ccDecodeCallBack) (void *context, int decoderIndex, int event);
   * @brief Registers callback functions for closed caption handling
   *
   * This function allows the caller to register two types of callback functions:
-  * - data_callback: A callback function that is called when new closed caption data is available
-  * - decode_callback: A callback function that is called to notify the caller about the start
-  *                    or stop of closed caption decoding
+  * - data_cb: A callback function that is called when new closed caption data is available
+  * - decode_cb: A callback function that is called to notify the caller about the start
+  *              or stop of closed caption decoding
   * 
-  * @param [in] decoderIndex    Identifier of the decoder
-  * @param [in] context         A context pointer to be forwarded to the callback calls
-  * @param [in] data_callback   Pointer to the callback function for handling new closed caption data
-  * @param [in] decode_callback Pointer to the callback function for decode start/stop notifications
+  * @param [in] decoderIdx   Identifier of the decoder
+  * @param [in] ctx          A context pointer to be forwarded to the callback calls
+  * @param [in] data_cb      Pointer to the callback function for handling new closed caption data
+  * @param [in] decode_cb    Pointer to the callback function for decode start/stop notifications
   *
   * @return int - Status
   * @retval 0  Successfully registered callback functions
   * @retval -1 Failed to register callback functions 
   *
-  * @note The data_callback() will be invoked whenever new closed caption data is available,
+  * @note The data_cb() will be invoked whenever new closed caption data is available,
   * allowing the caller to process the data accordingly
   * 
-  * The decode_callback() will be triggered when closed caption decoding starts or stops.
+  * The decode_cb() will be triggered when closed caption decoding starts or stops.
   * Events like ::CONTENT_PRESENTING_EVENT or ::PRESENTATION_SHUTDOWN_EVENT will be conveyed
-  * to the caller on ::media_closeCaptionStart() and ::media_closeCaptionStop() calls.
+  * to the caller on ::Closedcaption_Start() and ::Closedcaption_Stop() calls.
   * 
-  * @note decoderIndex should be 0 always. This value is passed back in ccDataCallback() and 
-  * ccDecodeCallBack() functions.
+  * @note decoderIdx should be 0 always. This value is passed back in closedcaptionDataCallback() and
+  * closedcaptionDecodeCallBack() functions.
   */
-int vlhal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_callback,
-                           ccDecodeCallBack decode_callback);
+int Closedcaption_Register(int decoderIdx, void *ctx,  closedcaptionDataCallback data_cb,
+                           closedcaptionDecodeCallBack decode_cb);
    
 
 /**
@@ -206,7 +206,7 @@ int vlhal_cc_Register(int decoderIndex, void *context,  ccDataCallback data_call
   * @return int The current decode sequence number
   * @retval range 0-65535
   */
-int vlhal_cc_DecodeSequence(void);
+int Closedcaption_DecodeSequence(void);
 
 
 /**
@@ -217,22 +217,22 @@ int vlhal_cc_DecodeSequence(void);
   * closed caption data becomes available. The decode sequence number
   * will also be incremented.
   *
-  * @param [in] pVidDecHandle Handle of the video decoder to retrieve the
+  * @param [in] vDecHandle Handle of the video decoder to retrieve the
   * closed caption data from
   *
   * @return int - Status
   * @retval 0  Successfully started decoding
   * @retval -1 Failed to start decoding
   *
-  * @see vlhal_cc_DecodeSequence()
-  * @pre vlhal_cc_Register()
-  * @note Before invoking this function, ensure that vlhal_cc_Register() has been called 
+  * @see Closedcaption_DecodeSequence()
+  * @pre Closedcaption_Register()
+  * @note Before invoking this function, ensure that Closedcaption_Register() has been called
   *       to register the required callback functions. Starting decoding without
   *       proper registration may lead to unexpected behavior or incorrect data processing.
   * this should used across all APIs in this file
   *
   */
-int media_closeCaptionStart(void* pVidDecHandle);
+int ClosedCaption_Start(void* vDecHandle);
 
 
 /**
@@ -246,14 +246,14 @@ int media_closeCaptionStart(void* pVidDecHandle);
   * @retval 0  Successfully stopped decoding
   * @retval -1 Failed to stop decoding
   *
-  * @see vlhal_cc_DecodeSequence()
-  * @pre media_closeCaptionStart()
-  * @note Before invoking this function, ensure that `media_closeCaptionStart` 
+  * @see Closedcaption_DecodeSequence()
+  * @pre Closedcaption_Start()
+  * @note Before invoking this function, ensure that `Closedcaption_Start`
           has been called to initiate decoding. Stopping decoding without first
   *       starting it may lead to unexpected behavior or incorrect data processing.
   *
   */
-int media_closeCaptionStop(void);
+int Closedcaption_Stop(void);
 
 #ifdef __cplusplus
 }

@@ -73,7 +73,7 @@ Since closed caption data is coming from video decoder, make sure that video dec
 
 ### Initialization and Startup
 
-`Caller` must call `vlhal_cc_Register()` before calling any other `API`. Any platform specific initialization can be done from `media_closeCaptionStart()`. `Caller` must have complete control over the lifecycle of this interface (from start to stop).
+`Caller` must call `Closedcaption_Register()` before calling any other `API`. Any platform specific initialization can be done from `Closedcaption_Start()`. `Caller` must have complete control over the lifecycle of this interface (from start to stop).
 
 ### Threading Model
 
@@ -93,14 +93,14 @@ This interface is not required to be involved in any power management funtionali
 
 ### Asynchronous Notification Model
 
-Events `CONTENT_PRESENTING_EVENT` and `PRESENTATION_SHUTDOWN_EVENT` must be conveyed to the caller to indicate start and stop of closed caption decoding respectively. These events are sent using `ccDecodeCallBack()` function.
+Events `CONTENT_PRESENTING_EVENT` and `PRESENTATION_SHUTDOWN_EVENT` must be conveyed to the caller to indicate start and stop of closed caption decoding respectively. These events are sent using `closedcaptionDecodeCallBack()` function.
 
 ### Blocking calls
 
 The following callbacks may be blocked depending on the `caller's` internal operations, but will need to be returned within a few milliseconds.
 
-  1. `ccDataCallback()` - Invoked whenever new closed caption data is available
-  2. `ccDecodeCallBack()` - Invoked during start and stop of closed caption dat§a decoding
+  1. `closedcaptionDataCallback()` - Invoked whenever new closed caption data is available
+  2. `closedcaptionDecodeCallBack()` - Invoked during start and stop of closed caption dat§a decoding
  
 ### Internal Error Handling
 
@@ -157,11 +157,11 @@ This interface is not required to have any platform or product customizations.
 `Caller` will initialize closed captions `HAL` interface with the callback functions, decoder index and video decoder handle. The value of decoder index will be zero always, and this value will be passed back in the ccDataCallback() and ccDecodeCallBack() functions. `HAL` will deliver closed caption data packets via the registered callbacks aligned with the corresponding video frame.The `HAL` can read data directly from the driver or by registering a call back function based on the platform `API` support. As per the spec, closed caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` must check `process_cc_data_flag` bit as per [CEA-708/CEA-608 spec](#references) and must ignore the packets with this flag set to 0. The `HAL` must parse the `cc_valid` bit as per [CEA-708/CEA-608 spec](#references) and only the packets with `cc_valid` set to 1 must be sent to the `caller`.
 
 Following is a typical sequence of operation:
-1. Register callbacks using  `vlhal_cc_Register()`.
-2. Start closed caption data decoding using `media_closeCaptionStart()`. The interface will continuously deliver closed caption data to `caller` in real time via callback `ccDataCallback()`.
-4. When the closed caption data is no longer needed, stop caption decoding using `media_closeCaptionStop()`. This will stop the `HAL` callbacks.
-5. Start and stop of decoding is notified to the `caller` using `ccDecodeCallBack()`.
-6. `vlhal_cc_DecodeSequence()` can be called to get the decode sequence number whenever required.
+1. Register callbacks using  `Closedcaption_Register()`.
+2. Start closed caption data decoding using `Closedcaption_Start()`. The interface will continuously deliver closed caption data to `caller` in real time via callback `closedcaptionDataCallback()`.
+4. When the closed caption data is no longer needed, stop caption decoding using `Closedcaption_Stop()`. This will stop the `HAL` callbacks.
+5. Start and stop of decoding is notified to the `caller` using `closedcaptionDecodeCallBack()`.
+6. `Closedcaption_DecodeSequence()` can be called to get the decode sequence number whenever required.
 
 ### Diagrams
 
@@ -173,20 +173,20 @@ Following is a typical sequence of operation:
     participant caller
     participant HAL
     participant Driver
-    caller->>HAL: vlhal_cc_Register()
-    caller->>HAL:media_closeCaptionStart()
+    caller->>HAL: Closedcaption_Register()
+    caller->>HAL:Closedcaption_Start()
     HAL->>Driver:Initialize/setup driver to fetch Closed Caption data
-    HAL-->> caller : ccDecodeCallBack()
+    HAL-->> caller : closedcaptionDecodeCallBack()
     loop data decoding
         HAL->>Driver : Query for data
         Driver-->>HAL : Closed Caption data
-        HAL-->>caller: ccDataCallback()
+        HAL-->>caller: closedcaptionDataCallback()
         caller->>caller:consume buffer
     end
-    caller->> HAL: vlhal_cc_DecodeSequence()
+    caller->> HAL: Closedcaption_DecodeSequence()
     HAL-->>caller:Decode sequence number
-    caller->>HAL: media_closeCaptionStop()
+    caller->>HAL: Closedcaption_Stop()
     HAL->>Driver: Stop indication
-    HAL-->>caller: ccDecodeCallBack()
+    HAL-->>caller: closedcaptionDecodeCallBack()
  ```
 
