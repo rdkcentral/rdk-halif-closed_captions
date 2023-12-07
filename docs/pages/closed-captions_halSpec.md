@@ -93,14 +93,14 @@ This interface is not required to be involved in any power management funtionali
 
 ### Asynchronous Notification Model
 
-Events `CONTENT_PRESENTING_EVENT` and `PRESENTATION_SHUTDOWN_EVENT` must be conveyed to the caller to indicate start and stop of closed caption decoding respectively. These events are sent using `closedcaptionDecodeCallBack()` function.
+Events `CONTENT_PRESENTING_EVENT` and `PRESENTATION_SHUTDOWN_EVENT` must be conveyed to the caller to indicate start and stop of closed caption decoding respectively. These events are sent using `closedcaptionDecodeCallback()` function.
 
 ### Blocking calls
 
 The following callbacks may be blocked depending on the `caller's` internal operations, but will need to be returned within a few milliseconds.
 
   1. `closedcaptionDataCallback()` - Invoked whenever new closed caption data is available
-  2. `closedcaptionDecodeCallBack()` - Invoked during start and stop of closed caption dat§a decoding
+  2. `closedcaptionDecodeCallback()` - Invoked during start and stop of closed caption data decoding
  
 ### Internal Error Handling
 
@@ -154,14 +154,13 @@ This interface is not required to have any platform or product customizations.
 
 ### Theory of operation
 
-`Caller` will initialize closed captions `HAL` interface with the callback functions, decoder index and video decoder handle. The value of decoder index will be zero always, and this value will be passed back in the closedcaptionDataCallback() and closedcaptionDecodeCallBack() functions. `HAL` will deliver closed caption data packets via the registered callbacks aligned with the corresponding video frame.The `HAL` can read data directly from the driver or by registering a call back function based on the platform `API` support. As per the spec, closed caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` must check `process_cc_data_flag` bit as per [CEA-708/CEA-608 spec](#references) and must ignore the packets with this flag set to 0. The `HAL` must parse the `cc_valid` bit as per [CEA-708/CEA-608 spec](#references) and only the packets with `cc_valid` set to 1 must be sent to the `caller`.
+`Caller` will initialize closed captions `HAL` interface with the callback functions and video decoder handle. `HAL` will deliver closed caption data packets via the registered callbacks aligned with the corresponding video frame.The `HAL` can read data directly from the driver or by registering a call back function based on the platform `API` support. As per the spec, closed caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` must check `process_cc_data_flag` bit as per [CEA-708/CEA-608 spec](#references) and must ignore the packets with this flag set to 0. The `HAL` must parse the `cc_valid` bit as per [CEA-708/CEA-608 spec](#references) and only the packets with `cc_valid` set to 1 must be sent to the `caller`.
 
 Following is a typical sequence of operation:
 1. Register callbacks using  `Closedcaption_Register()`.
 2. Start closed caption data decoding using `Closedcaption_Start()`. The interface will continuously deliver closed caption data to `caller` in real time via callback `closedcaptionDataCallback()`.
 4. When the closed caption data is no longer needed, stop caption decoding using `Closedcaption_Stop()`. This will stop the `HAL` callbacks.
-5. Start and stop of decoding is notified to the `caller` using `closedcaptionDecodeCallBack()`.
-6. `Closedcaption_DecodeSequence()` can be called to get the decode sequence number whenever required.
+5. Start and stop of decoding is notified to the `caller` using `closedcaptionDecodeCallback()`.
 
 ### Diagrams
 
@@ -176,17 +175,15 @@ Following is a typical sequence of operation:
     caller->>HAL: Closedcaption_Register()
     caller->>HAL:Closedcaption_Start()
     HAL->>Driver:Initialize/setup driver to fetch Closed Caption data
-    HAL-->> caller : closedcaptionDecodeCallBack()
+    HAL-->> caller : closedcaptionDecodeCallback()
     loop data decoding
         HAL->>Driver : Query for data
         Driver-->>HAL : Closed Caption data
         HAL-->>caller: closedcaptionDataCallback()
         caller->>caller:consume buffer
     end
-    caller->> HAL: Closedcaption_DecodeSequence()
-    HAL-->>caller:Decode sequence number
     caller->>HAL: Closedcaption_Stop()
     HAL->>Driver: Stop indication
-    HAL-->>caller: closedcaptionDecodeCallBack()
+    HAL-->>caller: closedcaptionDecodeCallback()
  ```
 
