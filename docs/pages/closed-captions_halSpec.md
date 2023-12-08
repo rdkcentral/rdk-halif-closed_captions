@@ -133,7 +133,7 @@ This interface is required to use only minimal memory/`CPU` resources while in s
 
 ### Licensing
 
-The closed caption header file license is RDK M.
+The closed caption header file is released under Apache 2.0 license. The implementation may use any license compatible with the aforementioned header file.
 
 ### Build Requirements
 
