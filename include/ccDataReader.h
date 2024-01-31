@@ -79,7 +79,7 @@
 
 #ifndef __CC_DATA_READER_H__
 #define __CC_DATA_READER_H__
-
+#endif
 /**
  * @brief Closed Caption events
  *
@@ -144,8 +144,8 @@ extern "C" {
  * @return None
  */
 typedef void (* closedCaption_dataCallback) (void *pContext, closedCaption_data_t eDataType,
-                                 unsigned char* pDataBuffer, unsigned uDataLength,
-                                 long long lPTS);
+                                 unsigned char* pDataBuffer, uint32_t uDataLength,
+                                 int64_t lPTS);
 
 
 /**
