@@ -34,11 +34,11 @@
 **/
 
 /**
-* @file ccDataReader.h
+* @file closedCaption.h
 *
-* @brief Closed Caption Data Reader Public API
+* @brief Closed Caption Public API
 *
-* This API defines the HAL for the Closed Caption Data Reader interface
+* This API defines the HAL for the Closed Caption interface
 *
 * @par Document
 * Document reference
@@ -59,26 +59,26 @@
 *
 */ 
 /**
- * @defgroup CC_Data_Reader CC Data Reader
+ * @defgroup Closed_Caption Closed Caption
  * @{
- * The CC Data Reader provides an interface to the caller to start the 
+ * The Closed Caption hal provides an interface to the caller to start the 
  * closed caption data acquisition with decoder handle as input. 
  * Data can be read directly or by registering a call back function 
  * based on the platform API support.
- * The caller registers callback function with the CC Data Reader to 
- * get the ccdata. The CC Data Reader reads CC data from the cc port 
+ * The caller registers callback function with the Closed Caption hal to 
+ * get the ccdata. The Closed Caption hal reads CC data from the cc port 
  * of the decoder and passes the data to the caller through the 
  * registered callback function.
  *
- * Described herein are the Closed Caption Data Reader (ccDataReader) HAL 
+ * Described herein are the Closed Caption HAL 
  * types and functions that are part of the Closed Caption sub-system.
  *
- * The ccDataReader implementation delivers closed caption data to the 
+ * The Closed Caption hal implementation delivers closed caption data to the 
  * caller using a callback mechanism.
  */ 
 
-#ifndef __CC_DATA_READER_H__
-#define __CC_DATA_READER_H__
+#ifndef __CLOSED_CAPTION_H__
+#define __CLOSED_CAPTION_H__
 #endif
 /**
  * @brief Closed Caption events
@@ -244,9 +244,9 @@ closedCaption_status_t closedCaption_stop(void);
 #ifdef __cplusplus
 }
 #endif
-#endif // End of __CC_DATA_READER_H__
+#endif // End of __CLOSED_CAPTION_H__
 
-/** @} */ // End of CC Data Reader
+/** @} */ // End of Closed Caption
 /** @} */ // End of Closed Captions HAL
 /** @} */ // End of Closed Captions Module
 /** @} */ // End of HPK

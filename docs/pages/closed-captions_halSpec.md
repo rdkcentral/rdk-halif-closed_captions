@@ -73,7 +73,7 @@ Since closed caption data is coming from video decoder, make sure that video dec
 
 ### Initialization and Startup
 
-`Caller` must call `Closedcaption_Register()` before calling any other `API`. Any platform specific initialization can be done from `Closedcaption_Start()`. `Caller` must have complete control over the lifecycle of this interface (from start to stop).
+`Caller` must call `closedCaption_register()` before calling any other `API`. Any platform specific initialization can be done from `closedCaption_start()`. `Caller` must have complete control over the lifecycle of this interface (from start to stop).
 
 ### Threading Model
 
@@ -85,7 +85,7 @@ The interface is expected to support a single instantiation with a single proces
 
 ### Memory Model
 
-Closed Captions `HAL` is responsible for its own memory management. The buffer used to pass closed caption data through `closedcaptionDataCallback()` must be managed after the callback returns.
+Closed Captions `HAL` is responsible for its own memory management. The buffer used to pass closed caption data through `closedCaption_dataCallback()` must be managed after the callback returns.
 
 ### Power Management Requirements
 
@@ -93,14 +93,14 @@ This interface is not required to be involved in any power management funtionali
 
 ### Asynchronous Notification Model
 
-Events `CONTENT_PRESENTING_EVENT` and `PRESENTATION_SHUTDOWN_EVENT` must be conveyed to the caller to indicate start and stop of closed caption decoding respectively. These events are sent using `closedcaptionDecodeCallback()` function.
+Events `CLOSEDCAPTION_EVENT_CONTENT_PRESENTING` and `CLOSEDCAPTION_EVENT_PRESENTATION_SHUTDOWN` must be conveyed to the caller to indicate start and stop of closed caption decoding respectively. These events are sent using `closedCaption_decodeCallback()` function.
 
 ### Blocking calls
 
 The following callbacks may be blocked depending on the `caller's` internal operations, but will need to be returned within a few milliseconds.
 
-  1. `closedcaptionDataCallback()` - Invoked whenever new closed caption data is available
-  2. `closedcaptionDecodeCallback()` - Invoked during start and stop of closed caption data decoding
+  1. `closedCaption_dataCallback()` - Invoked whenever new closed caption data is available
+  2. `closedCaption_decodeCallback()` - Invoked during start and stop of closed caption data decoding
  
 ### Internal Error Handling
 
@@ -137,7 +137,7 @@ The closed caption header file is released under Apache 2.0 license. The impleme
 
 ### Build Requirements
 
-This interface is required to be built into shared library. The shared library must be named `librdkCCReader.so`. The building mechanism must be independent of Yocto.
+This interface is required to be built into shared library. The shared library must be named `librdkClosedCaption.so`. The building mechanism must be independent of Yocto.
 
 ### Variability Management
 
@@ -157,10 +157,10 @@ This interface is not required to have any platform or product customizations.
 `Caller` will initialize closed captions `HAL` interface with the callback functions and video decoder handle. `HAL` will deliver closed caption data packets via the registered callbacks aligned with the corresponding video frame.The `HAL` can read data directly from the driver or by registering a call back function based on the platform `API` support. As per the spec, closed caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` must check `process_cc_data_flag` bit as per [CEA-708/CEA-608 spec](#references) and must ignore the packets with this flag set to 0. The `HAL` must parse the `cc_valid` bit as per [CEA-708/CEA-608 spec](#references) and only the packets with `cc_valid` set to 1 must be sent to the `caller`.
 
 Following is a typical sequence of operation:
-1. Register callbacks using  `Closedcaption_Register()`.
-2. Start closed caption data decoding using `Closedcaption_Start()`. The interface will continuously deliver closed caption data to `caller` in real time via callback `closedcaptionDataCallback()`.
-4. When the closed caption data is no longer needed, stop caption decoding using `Closedcaption_Stop()`. This will stop the `HAL` callbacks.
-5. Start and stop of decoding is notified to the `caller` using `closedcaptionDecodeCallback()`.
+1. Register callbacks using  `closedCaption_register()`.
+2. Start closed caption data decoding using `closedCaption_start()`. The interface will continuously deliver closed caption data to `caller` in real time via callback `closedCaption_dataCallback()`.
+4. When the closed caption data is no longer needed, stop caption decoding using `closedCaption_stop()`. This will stop the `HAL` callbacks.
+5. Start and stop of decoding is notified to the `caller` using `closedCaption_decodeCallback()`.
 
 ### Diagrams
 
@@ -172,18 +172,18 @@ Following is a typical sequence of operation:
     participant caller
     participant HAL
     participant Driver
-    caller->>HAL: Closedcaption_Register()
-    caller->>HAL:Closedcaption_Start()
+    caller->>HAL: closedCaption_register()
+    caller->>HAL:closedCaption_start()
     HAL->>Driver:Initialize/setup driver to fetch Closed Caption data
-    HAL-->> caller : closedcaptionDecodeCallback()
+    HAL-->> caller : closedCaption_decodeCallback()
     loop data decoding
         HAL->>Driver : Query for data
         Driver-->>HAL : Closed Caption data
-        HAL-->>caller: closedcaptionDataCallback()
+        HAL-->>caller: closedCaption_dataCallback()
         caller->>caller:consume buffer
     end
-    caller->>HAL: Closedcaption_Stop()
+    caller->>HAL: closedCaption_stop()
     HAL->>Driver: Stop indication
-    HAL-->>caller: closedcaptionDecodeCallback()
+    HAL-->>caller: closedCaption_decodeCallback()
  ```
 
