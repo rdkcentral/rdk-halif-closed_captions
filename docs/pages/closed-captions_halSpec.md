@@ -116,7 +116,7 @@ The following non-functional requirements are required to be supported by this i
 
 ### Logging and debugging requirements
 
-This interface is required to support DEBUG, INFO, WARNING, TRACE and ERROR messages. INFO, TRACE and DEBUG should be disabled by default and enabled when required.
+This interface is required to support DEBUG, INFO, WARNING, TRACE and ERROR messages. INFO, TRACE and DEBUG should be disabled by default and enabled when required. The log level can be controlled from /tmp/hal_cc_debug.ini file. Configuration file template - LOG.HAL.CC =  
 
 ### Memory and performance requirements
 
@@ -154,7 +154,7 @@ This interface is not required to have any platform or product customizations.
 
 ### Theory of operation
 
-`Caller` will initialize closed captions `HAL` interface with the callback functions and video decoder handle. `HAL` will deliver closed caption data packets via the registered callbacks aligned with the corresponding video frame.The `HAL` can read data directly from the driver or by registering a call back function based on the platform `API` support. As per the spec, closed caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` must check `process_cc_data_flag` bit as per [CEA-708/CEA-608 spec](#references) and must ignore the packets with this flag set to 0. The `HAL` must parse the `cc_valid` bit as per [CEA-708/CEA-608 spec](#references) and only the packets with `cc_valid` set to 1 must be sent to the `caller`.
+`Caller` will initialize closed captions `HAL` interface with the callback functions and video decoder handle. `HAL` will deliver closed caption data packets via the registered callbacks aligned with the corresponding video frame. The `HAL` can read data directly from the driver or by registering a call back function based on the platform `API` support. As per the spec, closed caption data packet is sent in this byte order :  cc_type,cc_data_1,cc_data_2. `HAL` must check `process_cc_data_flag` bit as per [CEA-708/CEA-608 spec](#references) and must ignore the packets with this flag set to 0. The `HAL` must parse the `cc_valid` bit as per [CEA-708/CEA-608 spec](#references) and only the packets with `cc_valid` set to 1 must be sent to the `caller`. Caller can clear the registered callbacks by calling `closedCaption_register()` by passing NULL pointers.
 
 Following is a typical sequence of operation:
 1. Register callbacks using  `closedCaption_register()`.
