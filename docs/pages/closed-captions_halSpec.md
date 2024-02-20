@@ -60,11 +60,11 @@ This `HAL` provides an interface to the `caller` to start and stop the closed ca
 ```mermaid
 %%{init: {"flowchart": {"curve": "linear"}} }%%
 flowchart
-    A[Caller] <-->|Handle| B[Closed Captions HAL]
-    B --> |Query for data| C[Driver]
-    C --> |data| B
-    B --> |data| A
+    Caller <--> HALIF[HAL Interface `HALIF.h`]
+    HALIF <--> VendorWrapper[HAL IF Implementation 'Vendor']
+    VendorWrapper <--> VendorDrivers[Vendor Drivers]
  ```
+    
 
 ## Component Runtime Execution Requirements
 
@@ -73,7 +73,7 @@ Since closed caption data is coming from video decoder, make sure that video dec
 
 ### Initialization and Startup
 
-`Caller` must call `closedCaption_register()` before calling any other `API`. Any platform specific initialization can be done from `closedCaption_start()`. `Caller` must have complete control over the lifecycle of this interface (from start to stop).
+`Caller` must call `closedCaption_register()` before calling any other `API`. Any platform specific driver initialization must be done from closedCaption_start()`. The `Caller` will have complete control over the lifecycle of this interface (from start to stop).
 
 ### Threading Model
 
@@ -81,11 +81,11 @@ This interface is required to be thread-safe.
 
 ### Process Model
 
-The interface is expected to support a single instantiation with a single process.
+The interface will be called by a single instantiation within a single process.
 
 ### Memory Model
 
-Closed Captions `HAL` is responsible for its own memory management. The buffer used to pass closed caption data through `closedCaption_dataCallback()` must be managed after the callback returns.
+Closed Captions HAL is responsible for managing all memory including the memory passed through the `closedCaption_dataCallback()`, which will be freed by the HAL once the callback returns.
 
 ### Power Management Requirements
 
@@ -97,7 +97,7 @@ Events `CLOSEDCAPTION_EVENT_CONTENT_PRESENTING` and `CLOSEDCAPTION_EVENT_PRESENT
 
 ### Blocking calls
 
-The following callbacks may be blocked depending on the `caller's` internal operations, but will need to be returned within a few milliseconds.
+The following callbacks may be blocked depending on the caller's internal operations, but the expectation is that these will return as fast as possible, ideally within a few milliseconds.
 
   1. `closedCaption_dataCallback()` - Invoked whenever new closed caption data is available
   2. `closedCaption_decodeCallback()` - Invoked during start and stop of closed caption data decoding
@@ -116,7 +116,7 @@ The following non-functional requirements are required to be supported by this i
 
 ### Logging and debugging requirements
 
-This interface is required to support DEBUG, INFO, WARNING, TRACE and ERROR messages. INFO, TRACE and DEBUG should be disabled by default and enabled when required. The log level can be controlled from /tmp/hal_cc_debug.ini file. Configuration file template - LOG.HAL.CC =  
+This interface is required to support DEBUG, INFO, WARNING, TRACE and ERROR messages. INFO, TRACE and DEBUG should be disabled by default and enabled when required. The log level can be controlled from /tmp/hal_cc_debug.ini file. Configuration file template - LOG.HAL.CC =  FATAL ERROR WARNING INFO DEBUG TRACE
 
 ### Memory and performance requirements
 
