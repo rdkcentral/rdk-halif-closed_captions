@@ -24,11 +24,6 @@
 **/
 
 /**
-* @defgroup Closed_Captions Closed Captions Module
-* @{
-**/
-
-/**
 * @defgroup Closed_Captions_HAL Closed Captions HAL
 * @{
 **/
@@ -59,8 +54,6 @@
 *
 */ 
 /**
- * @defgroup Closed_Caption Closed Caption
- * @{
  * The Closed Caption hal provides an interface to the caller to start the 
  * closed caption data acquisition with decoder handle as input. 
  * Data can be read directly or by registering a call back function 
@@ -116,8 +109,6 @@ typedef enum
   CLOSEDCAPTION_STATUS_FAILED_TO_START_DECODING,  /**< Failed to start decoding error */
   CLOSEDCAPTION_STATUS_NOT_REGISTERED,            /**< Callback not registered error */
   CLOSEDCAPTION_STATUS_ALREADY_REGISTERED,        /**< Callback already registered error */
-  CLOSEDCAPTION_STATUS_ALREADY_STARTED,           /**< Decoding already started error */
-  CLOSEDCAPTION_STATUS_NOT_STARTED                /**< Decoding not started error */
  }closedCaption_status_t;
 
 
@@ -134,6 +125,7 @@ extern "C" {
  * 
  * The callback will not take ownership of ccData Buffer. It is the responsibility 
  * of the Hal to free/manage this memory.
+ * The `Caller` must copy the data if they wish it to persist.
  *
  * @param [in] pContext      Context pointer that was passed to ::closedCaption_register()
  * @param [in] eDataType     Type of closed caption data, closedCaption_data_t(eg: CLOSEDCAPTION_DATA_TYPE_608 or CLOSEDCAPTION_DATA_TYPE_708)
@@ -191,8 +183,9 @@ typedef void (* closedCaption_decodeCallback) (void *pContext, closedCaption_eve
   * to the caller on ::closedCaption_start() and ::closedCaption_stop() calls.
   * 
   */
-closedCaption_status_t closedCaption_register(void *pContext,  closedCaption_dataCallback dataCallback,
-                           closedCaption_decodeCallback decodeCallback);
+closedCaption_status_t closedCaption_register( void *pContext,  
+                                               closedCaption_dataCallback dataCallback,
+                                               closedCaption_decodeCallback decodeCallback);
 
 
 /**
@@ -210,12 +203,11 @@ closedCaption_status_t closedCaption_register(void *pContext,  closedCaption_dat
   * @retval CLOSEDCAPTION_STATUS_INVALID_PARAM  Invalid Param
   * @retval CLOSEDCAPTION_STATUS_FAILED_TO_START_DECODING Failed to start decoding
   * @retval CLOSEDCAPTION_STATUS_NOT_REGISTERED Callbacks not registered
-  * @retval CLOSEDCAPTION_STATUS_ALREADY_STARTED Already started decoding
   *
   * @pre closedCaption_register()
   * @note Before invoking this function, ensure that closedCaption_register() has been called
-  *       to register the required callback functions. Starting decoding without
-  *       proper registration may lead to unexpected behavior or incorrect data processing.
+  * to register the required callback functions. Starting decoding without
+  * proper registration may lead to unexpected behavior or incorrect data processing.
   * this should used across all APIs in this file
   *
   */
@@ -231,12 +223,8 @@ closedCaption_status_t closedCaption_start(void* pVideoDecoderHandle);
   * @return closedCaption_status_t - Status
   * @retval CLOSEDCAPTION_STATUS_OK  Successfully stopped decoding
   * @retval CLOSEDCAPTION_STATUS_NOT_REGISTERED Callbacks not registered
-  * @retval CLOSEDCAPTION_STATUS_NOT_STARTED Decoding not started
   *
-  * @pre closedCaption_start()
-  * @note Before invoking this function, ensure that `closedCaption_start`
-          has been called to initiate decoding. Stopping decoding without first
-  *       starting it may lead to unexpected behavior or incorrect data processing.
+  * @pre closedCaption_register()
   *
   */
 closedCaption_status_t closedCaption_stop(void);
@@ -246,8 +234,6 @@ closedCaption_status_t closedCaption_stop(void);
 #endif
 #endif // End of __CLOSED_CAPTION_H__
 
-/** @} */ // End of Closed Caption
 /** @} */ // End of Closed Captions HAL
-/** @} */ // End of Closed Captions Module
 /** @} */ // End of HPK
 
