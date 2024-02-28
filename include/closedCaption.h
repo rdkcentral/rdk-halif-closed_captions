@@ -181,7 +181,8 @@ typedef void (* closedCaption_decodeCallback) (void *pContext, closedCaption_eve
   * The decodeCallback() will be triggered when closed caption decoding starts or stops.
   * Events like ::CLOSEDCAPTION_EVENT_CONTENT_PRESENTING or ::CLOSEDCAPTION_EVENT_PRESENTATION_SHUTDOWN will be conveyed
   * to the caller on ::closedCaption_start() and ::closedCaption_stop() calls.
-  * 
+  *
+  * The callbacks can be cleared by passing NULL pointers as function arguments. 
   */
 closedCaption_status_t closedCaption_register( void *pContext,  
                                                closedCaption_dataCallback dataCallback,
@@ -218,7 +219,7 @@ closedCaption_status_t closedCaption_start(void* pVideoDecoderHandle);
   * @brief Stops closed caption decoding
   *
   * This function is used to stop closed caption decoding. After invoking this call, 
-  * data ready callbacks for closed caption data will be halted.
+  * data ready callbacks for closed caption data will be halted immediately.
   *
   * @return closedCaption_status_t - Status
   * @retval CLOSEDCAPTION_STATUS_OK  Successfully stopped decoding
