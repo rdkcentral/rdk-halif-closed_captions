@@ -104,7 +104,7 @@ The following callbacks may be blocked depending on the caller's internal operat
  
 ### Internal Error Handling
 
-All `APIs` must return errors synchronously as a return argument. The interface is responsible for managing its internal errors.
+All `APIs` must return errors synchronously as a return argument. All internal errors should be returned to the caller.
 
 ### Persistence Model
 
