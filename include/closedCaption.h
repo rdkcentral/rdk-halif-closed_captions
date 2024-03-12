@@ -159,12 +159,18 @@ typedef void (* closedCaption_decodeCallback) (void *pContext, closedCaption_eve
  */
 
   /**
-  * @brief Registers callback functions for closed caption handling
+  * @brief Registers callback functions for closed caption handling.
+  *
+  * The decodeCallback() will be triggered when closed caption decoding starts or stops.
+  * Events like ::CLOSEDCAPTION_EVENT_CONTENT_PRESENTING or ::CLOSEDCAPTION_EVENT_PRESENTATION_SHUTDOWN 
+  * will be conveyed to the caller on ::closedCaption_start() and ::closedCaption_stop() calls.
+  *
+  * The callbacks can be cleared by passing NULL pointers as function arguments.
   *
   * This function allows the caller to register two types of callback functions:
   * - dataCallback: A callback function that is called when new closed caption data is available
   * - decodeCallback: A callback function that is called to notify the caller about the start
-  *              or stop of closed caption decoding
+  *                   or stop of closed caption decoding
   * 
   * @param [in] pContext          A context pointer to be forwarded to the callback calls
   * @param [in] dataCallback      Pointer to the callback function for handling new closed caption data
@@ -176,13 +182,7 @@ typedef void (* closedCaption_decodeCallback) (void *pContext, closedCaption_eve
   * @retval CLOSEDCAPTION_STATUS_ALREADY_REGISTERED Already registered with same values    
   *
   * @note The dataCallback() will be invoked whenever new closed caption data is available,
-  * allowing the caller to process the data accordingly
-  * 
-  * The decodeCallback() will be triggered when closed caption decoding starts or stops.
-  * Events like ::CLOSEDCAPTION_EVENT_CONTENT_PRESENTING or ::CLOSEDCAPTION_EVENT_PRESENTATION_SHUTDOWN will be conveyed
-  * to the caller on ::closedCaption_start() and ::closedCaption_stop() calls.
-  *
-  * The callbacks can be cleared by passing NULL pointers as function arguments. 
+  * allowing the caller to process the data accordingly 
   */
 closedCaption_status_t closedCaption_register( void *pContext,  
                                                closedCaption_dataCallback dataCallback,
