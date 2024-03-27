@@ -161,6 +161,9 @@ typedef void (* closedCaption_decodeCallback) (void *pContext, closedCaption_eve
   /**
   * @brief Registers callback functions for closed caption handling.
   *
+  * The dataCallback() will be invoked whenever new closed caption data is available,
+  * allowing the caller to process the data accordingly.
+  *
   * The decodeCallback() will be triggered when closed caption decoding starts or stops.
   * Events like ::CLOSEDCAPTION_EVENT_CONTENT_PRESENTING or ::CLOSEDCAPTION_EVENT_PRESENTATION_SHUTDOWN 
   * will be conveyed to the caller on ::closedCaption_start() and ::closedCaption_stop() calls.
@@ -181,8 +184,6 @@ typedef void (* closedCaption_decodeCallback) (void *pContext, closedCaption_eve
   * @retval CLOSEDCAPTION_STATUS_INVALID_PARAM  Invalid Param
   * @retval CLOSEDCAPTION_STATUS_ALREADY_REGISTERED Already registered with same values    
   *
-  * @note The dataCallback() will be invoked whenever new closed caption data is available,
-  * allowing the caller to process the data accordingly 
   */
 closedCaption_status_t closedCaption_register( void *pContext,  
                                                closedCaption_dataCallback dataCallback,
