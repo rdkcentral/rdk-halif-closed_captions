@@ -118,9 +118,6 @@ The following non-functional requirements are required to be supported by this i
 
 This interface is required to support DEBUG, INFO, WARNING, TRACE and ERROR messages. INFO, TRACE and DEBUG should be disabled by default and enabled when required. 
 
-The log level can be controlled from /tmp/hal_cc_debug.ini file. 
-Configuration file template - LOG.HAL.CC =  ERROR WARNING INFO DEBUG TRACE.
-
 If systemd is enabled, `sd_journal_print()` should be used for logging, else printf can be used.
 
 Logging format should be as follows:
@@ -132,7 +129,9 @@ Logging format should be as follows:
 - Module name - Name of the module
 - Log Level -  ERROR, DEBUG etc
 - Thread Id - Currently executing thread's Id
-- Message - String Message 
+- Message - String Message
+
+  Example : CC_HAL INFO 1234 log message
 
 ### Memory and performance requirements
 
