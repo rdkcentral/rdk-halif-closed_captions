@@ -131,7 +131,7 @@ Logging format should be as follows:
 - Thread Id - Currently executing thread's Id
 - Message - String Message
 
-  Example : CC_HAL INFO 1234 log message
+  Example : CC_HAL INFO 1234 <log message>
 
 ### Memory and performance requirements
 
