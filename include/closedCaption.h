@@ -72,6 +72,9 @@
 
 #ifndef __CLOSED_CAPTION_H__
 #define __CLOSED_CAPTION_H__
+
+#include <stdint.h>
+
 #endif
 /**
  * @brief Closed Caption events
