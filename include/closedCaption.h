@@ -75,7 +75,6 @@
 
 #include <stdint.h>
 
-#endif
 /**
  * @brief Closed Caption events
  *
