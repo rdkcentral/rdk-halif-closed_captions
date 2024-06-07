@@ -73,7 +73,7 @@ Since closed caption data is coming from video decoder, make sure that video dec
 
 ### Initialization and Startup
 
-`Caller` must call `closedCaption_register()` before calling any other `API`. Any platform specific driver initialization must be done from closedCaption_start()`. The `Caller` will have complete control over the lifecycle of this interface (from start to stop).
+`Caller` must call `closedCaption_register()` before calling any other `API`. Any platform specific driver initialization must be done from `closedCaption_start()`. The `Caller` will have complete control over the lifecycle of this interface (from start to stop).
 
 ### Threading Model
 
